@@ -22,7 +22,7 @@ public class User {
 
     private String password;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_group",
             joinColumns = @JoinColumn(name = "user_id"),

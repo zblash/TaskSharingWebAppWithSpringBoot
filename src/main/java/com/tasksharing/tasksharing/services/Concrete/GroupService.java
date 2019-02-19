@@ -45,4 +45,8 @@ public class GroupService {
     public Group Update(Group task){
         return groupRepository.saveAndFlush(task);
     }
+
+    public Group findByGroupName(String name) {
+        return groupRepository.findByGroupName(name);
+    }
 }
