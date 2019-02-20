@@ -4,6 +4,7 @@ import com.tasksharing.tasksharing.models.Group;
 import com.tasksharing.tasksharing.models.User;
 import com.tasksharing.tasksharing.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +15,9 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public List<User> findAll() {
 
         return userRepository.findAll();
@@ -23,8 +27,8 @@ public class UserService {
         return userRepository.findByUserName(userName);
     }
 
-    public User findById(Long taskId){
-        Optional<User> group = userRepository.findById(taskId);
+    public User findById(Long userId){
+        Optional<User> group = userRepository.findById(userId);
 
         try{
             if (!group.isPresent())
@@ -38,16 +42,19 @@ public class UserService {
 
     }
 
-    public void Add(User task){
-        userRepository.save(task);
+    public void Add(User user){
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+
     }
 
-    public void Delete(User task){
-        userRepository.delete(task);
+    public void Delete(User user){
+        userRepository.delete(user);
     }
 
-    public User Update(User task){
-        return userRepository.saveAndFlush(task);
+    public User Update(User user){
+        return userRepository.saveAndFlush(user);
     }
 
     public List<User> findByGroups_Id(Long id){
@@ -55,8 +62,6 @@ public class UserService {
     }
 
     public boolean hasGroup(User user, Group group){
-        Long p = user.getId();
-        Long x = group.getId();
         Optional<List<User>> users = Optional.ofNullable(userRepository.findByGroups_Id(group.getId()));
         return users.isPresent() && users.get().contains(user);
     }

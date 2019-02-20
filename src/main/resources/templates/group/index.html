@@ -6,5 +6,13 @@
 </head>
 <body>
 <span th:text="${group.groupName}"> Name </span>
+
+
+<tr th:if="${group.Users.empty}">
+    <td colspan="2"> There is no User </td>
+</tr>
+<tr th:each="user : ${group.Users}">
+    <td><span th:text="${user.UserName}"> Name </span></td>
+</tr>
 </body>
 </html>

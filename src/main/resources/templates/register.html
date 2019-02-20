@@ -1,0 +1,37 @@
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1 class="h3 mb-3 font-weight-normal">Üye Kaydı</h1>
+
+    <form autocomplete="off" action="#" th:action="@{/register}" th:object="${user}" method="post">
+
+        <label>Adnız </label>
+        <input type="text" id="firstName" placeholder="First Name" th:field="*{FirstName}" class="form-control"/><br/>
+
+        <label>Soyadınız</label>
+        <input type="text" id="lastName" placeholder="Last Name" th:field="*{LastName}" class="form-control"/><br/>
+
+        <label>Kullanıcı Adınız</label>
+        <input type="text" id="username" placeholder=" Username" th:field="*{UserName}" class="form-control"/><br/>
+
+        <label>Email</label>
+        <input type="text" id="email" placeholder=" E-mail" th:field="*{Email}" class="form-control"/><br/>
+
+        <label>Parolanız </label>
+        <input type="text" id="password" placeholder=" Password" th:field="*{Password}" class="form-control"/><br/>
+
+        <button type="submit" class="btn btn-success text-center form-control">Kaydet</button>
+
+
+    </form>
+    <div class="margin-top20 text-center"><a th:href="@{/login}">Giriş Sayfasına Git</a></div>
+</div>
+</body>
+</html>
