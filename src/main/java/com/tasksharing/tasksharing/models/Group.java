@@ -20,10 +20,14 @@ public class Group {
 
     private String description;
 
-    @OneToMany(mappedBy = "group")
+    @OneToMany(mappedBy = "group",fetch = FetchType.LAZY)
     private Collection<Task> tasks = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "groups")
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_group",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Collection<User> users = new ArrayList<>();
 
     public void addUser(User user){

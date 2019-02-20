@@ -14,5 +14,12 @@
 <tr th:each="user : ${group.Users}">
     <td><span th:text="${user.UserName}"> Name </span></td>
 </tr>
+
+<tr th:if="${group.Tasks.empty}">
+    <td colspan="2"> There is no Task </td>
+</tr>
+<tr th:each="user : ${group.Tasks}">
+    <td><span th:text="${user.Name}"> Name </span></td>
+</tr>
 </body>
 </html>

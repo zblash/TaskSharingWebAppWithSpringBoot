@@ -2,6 +2,7 @@ package com.tasksharing.tasksharing.controllers;
 
 import com.tasksharing.tasksharing.models.User;
 import com.tasksharing.tasksharing.services.Concrete.GroupService;
+import com.tasksharing.tasksharing.services.Concrete.SecurityService;
 import com.tasksharing.tasksharing.services.Concrete.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,7 @@ public class UserController {
     private Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
-    private GroupService groupService;
+    private SecurityService securityService;
 
 
     @GetMapping("/register")
@@ -56,8 +57,8 @@ public class UserController {
     }
 
     @GetMapping("me/groups")
-    public String meGroups(Authentication authentication,Model model){
-        model.addAttribute("groups",userService.findByUserName(authentication.getName()).getGroups());
+    public String meGroups(Model model){
+        model.addAttribute("groups",userService.findByUserName(securityService.findLoggedInUsername()).getGroups());
         return "me/groups";
     }
 

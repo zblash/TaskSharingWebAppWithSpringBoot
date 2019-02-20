@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form autocomplete="off" action="#" th:action="@{/group/create}" th:object="${group}" method="post">
+    <label>Grup Adı </label>
+    <input type="text" id="groupName" placeholder="Grup İsmi" th:field="*{GroupName}" class="form-control"/><br/>
+    <span th:if="${#fields.hasErrors('groupName')}" th:errors="*{groupName}">FirstName Error</span>
+
+    <label>Adnız </label>
+    <input type="text" id="description" placeholder="description" th:field="*{Description}" class="form-control"/><br/>
+    <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}">FirstName Error</span>
+
+    <button type="submit" class="btn btn-success text-center form-control">Kaydet</button>
+</form>
+</body>
+</html>

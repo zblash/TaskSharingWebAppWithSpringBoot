@@ -35,11 +35,7 @@ public class User {
     @Size(min = 5)
     private String password;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "user_group",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "group_id"))
+    @ManyToMany(mappedBy = "users",fetch = FetchType.LAZY)
     private Collection<Group> groups  = new ArrayList<>();
 
     public void addGroup(Group group){
