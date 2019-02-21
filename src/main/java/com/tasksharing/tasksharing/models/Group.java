@@ -1,5 +1,8 @@
 package com.tasksharing.tasksharing.models;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,10 +48,12 @@ public class Group {
 
     }
 
-    public Group(String name, String description, Set<Task> tasks) {
-        this.groupName = name;
+    public Group(String groupName, Long user_id, String description, Collection<Task> tasks, Collection<User> users) {
+        this.groupName = groupName;
+        this.user_id = user_id;
         this.description = description;
         this.tasks = tasks;
+        this.users = users;
     }
 
     public Long getId() {
@@ -98,4 +103,6 @@ public class Group {
     public void setUsers(Collection<User> users) {
         this.users = users;
     }
+
+
 }

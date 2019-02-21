@@ -40,13 +40,19 @@ public class User {
 
     public void addGroup(Group group){
         groups.add(group);
-        group.getUsers().add(this);
     }
 
     public void removeGroup(Group group){
         groups.remove(group);
-        group.getUsers().remove(this);
     }
+    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @JoinTable(name = "users_privileges",
+            joinColumns =
+            @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns =
+            @JoinColumn(name = "privilege_id", referencedColumnName = "id"))
+    private Collection<Privilege> privileges;
+
     public User() {
     }
 
@@ -112,5 +118,13 @@ public class User {
 
     public void setGroups(Collection<Group> groups) {
         this.groups = groups;
+    }
+
+    public Collection<Privilege> getPrivileges() {
+        return privileges;
+    }
+
+    public void setPrivileges(Collection<Privilege> privileges) {
+        this.privileges = privileges;
     }
 }
