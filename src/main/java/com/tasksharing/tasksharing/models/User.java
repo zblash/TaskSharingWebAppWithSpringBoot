@@ -45,6 +45,9 @@ public class User {
     public void removeGroup(Group group){
         groups.remove(group);
     }
+
+
+
     @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinTable(name = "users_privileges",
             joinColumns =
@@ -52,6 +55,14 @@ public class User {
             inverseJoinColumns =
             @JoinColumn(name = "privilege_id", referencedColumnName = "id"))
     private Collection<Privilege> privileges;
+
+    public void addPrivilege(Privilege privilege){
+        privileges.add(privilege);
+    }
+
+    public void removePrivilege(Privilege privilege){
+        privileges.remove(privilege);
+    }
 
     public User() {
     }

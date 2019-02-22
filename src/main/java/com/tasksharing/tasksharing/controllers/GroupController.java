@@ -38,13 +38,18 @@ public class GroupController {
     UserService userService;
 
     @Autowired
+    SecurityService securityService;
+
+    @Autowired
     PrivilegeRepository privilegeRepository;
 
     private final Logger logger = LoggerFactory.getLogger(GroupController.class);
 
+
+    @PreAuthorize("hasPermission('com.tasksharing.tasksharing.models.Group',#name,'ADMIN')")
     @GetMapping("/group/{name}")
-    public String Group(@PathVariable("name") String name, Authentication auth, Model model){
-        logger.info(auth.getAuthorities().toString());
+    public String Group(@PathVariable("name") String name, Model model){
+
         Group group = groupService.findByGroupName(name);
             model.addAttribute("group",group);
             return "group/index";
@@ -62,21 +67,15 @@ public class GroupController {
         if (result.hasErrors()){
             return "group/create";
         }
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        group.addUser(userService.findByUserName(auth.getName()));
-        User user = userService.findByUserName(auth.getName());
+        group.addUser(userService.findByUserName(securityService.findLoggedInUsername()));
+        User user = userService.findByUserName(securityService.findLoggedInUsername());
         Privilege createdprivilege = new Privilege();
         createdprivilege.setName(group.getGroupName().toUpperCase()+"_ADMIN");
-        user.setPrivileges(new ArrayList<>(Arrays.asList(createdprivilege)));
+        user.addPrivilege(createdprivilege);
         userService.Update(user);
         groupService.Add(group);
 
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        for (Privilege privilege : user.getPrivileges()) {
-            authorities.add(new SimpleGrantedAuthority(privilege.getName()));
-        }
-        Authentication newAuth = new UsernamePasswordAuthenticationToken(auth.getPrincipal(), auth.getCredentials(),authorities);
-        SecurityContextHolder.getContext().setAuthentication(newAuth);
+        securityService.reloadPrivilege(user);
         return "redirect:/group/"+group.getGroupName();
     }
 
