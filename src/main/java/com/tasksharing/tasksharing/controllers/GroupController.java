@@ -20,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import sun.rmi.runtime.Log;
 
 import javax.validation.Valid;
@@ -46,13 +47,41 @@ public class GroupController {
     private final Logger logger = LoggerFactory.getLogger(GroupController.class);
 
 
-    @PreAuthorize("hasPermission('com.tasksharing.tasksharing.models.Group',#name,'ADMIN')")
-    @GetMapping("/group/{name}")
-    public String Group(@PathVariable("name") String name, Model model){
+    @PreAuthorize("isMember(#slugname)")
+    @GetMapping("/group/{slugname}")
+    public String Group(@PathVariable("slugname") String slugname, Model model){
 
-        Group group = groupService.findByGroupName(name);
+        Group group = groupService.findBySlugName(slugname);
             model.addAttribute("group",group);
             return "group/index";
+    }
+
+    @PreAuthorize("hasPermission('com.tasksharing.tasksharing.models.Group',#name,'ADMIN')")
+    @GetMapping("/group/add-user/{name}")
+    public String AddUser(@PathVariable("name") String name, Model model){
+        model.addAttribute("groupName",name);
+        return "group/adduser";
+    }
+
+    @PreAuthorize("hasPermission('com.tasksharing.tasksharing.models.Group',#name,'ADMIN')")
+    @PostMapping("/group/add-user/{name}")
+    public String AddUser(@PathVariable("name") String name,@RequestParam("username") String username, Model model){
+        logger.info(name,username);
+        User user = userService.findByUserName(username);
+        logger.info(user.getUserName());
+        Group group = groupService.findBySlugName(name);
+        Privilege createdprivilege = privilegeRepository.findByName(group.getGroupName().toUpperCase()+"_USER");
+        if(createdprivilege == null){
+            createdprivilege = new Privilege();
+            createdprivilege.setName(group.getGroupName().toUpperCase()+"_USER");
+        }
+
+        user.addPrivilege(createdprivilege);
+        group.addUser(user);
+        logger.info(user.getUserName());
+        userService.Update(user);
+        groupService.Update(group);
+        return "redirect:/group/"+group.getGroupName();
     }
 
     @GetMapping("/group/create")

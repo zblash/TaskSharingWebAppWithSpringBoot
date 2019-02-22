@@ -18,6 +18,8 @@ public class Group {
 
     private String groupName;
 
+    private String slugName;
+
     @Transient
     private Long user_id;
 
@@ -70,6 +72,14 @@ public class Group {
 
     public void setGroupName(String groupName) {
         this.groupName = groupName;
+    }
+
+    public String getSlugName() {
+        return slugName;
+    }
+
+    public void setSlugName(String slugName) {
+        this.slugName = slugName;
     }
 
     public Long getUser_id() {

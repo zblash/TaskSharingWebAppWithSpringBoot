@@ -1,4 +1,4 @@
-package com.tasksharing.tasksharing;
+package com.tasksharing.tasksharing.Security;
 
 import com.tasksharing.tasksharing.services.Concrete.UserDetailsServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;

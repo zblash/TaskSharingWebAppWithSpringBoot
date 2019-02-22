@@ -14,6 +14,10 @@
     <input type="text" id="description" placeholder="description" th:field="*{Description}" class="form-control"/><br/>
     <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}">FirstName Error</span>
 
+    <label>Adnız </label>
+    <input type="text" id="slugName" placeholder="description" th:field="*{SlugName}" class="form-control"/><br/>
+    <span th:if="${#fields.hasErrors('slugName')}" th:errors="*{slugName}">FirstName Error</span>
+
     <button type="submit" class="btn btn-success text-center form-control">Kaydet</button>
 </form>
 </body>

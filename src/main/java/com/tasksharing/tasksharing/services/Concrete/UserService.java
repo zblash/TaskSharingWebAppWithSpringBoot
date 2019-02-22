@@ -64,11 +64,6 @@ public class UserService {
         return userRepository.findByGroups_Id(id);
     }
 
-    public boolean LoggedInUserhasGroup(Group group){
 
-        User user = userRepository.findByUserName(securityService.findLoggedInUsername());
-        Optional<List<User>> users = Optional.ofNullable(userRepository.findByGroups_Id(group.getId()));
-        return users.isPresent() && users.get().contains(user);
-    }
 }
 
