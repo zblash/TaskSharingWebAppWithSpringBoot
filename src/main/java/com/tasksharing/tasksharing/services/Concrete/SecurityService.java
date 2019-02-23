@@ -1,5 +1,6 @@
 package com.tasksharing.tasksharing.services.Concrete;
 
+import com.tasksharing.tasksharing.models.CustomPrincipal;
 import com.tasksharing.tasksharing.models.Privilege;
 import com.tasksharing.tasksharing.models.User;
 import org.slf4j.Logger;
@@ -24,6 +25,12 @@ public class SecurityService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         return auth != null ? auth.getName() : null;
+    }
+
+    public User findLoggedInUser() {
+        User user = ((CustomPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+
+        return user;
     }
 
     public void reloadPrivilege(User user){

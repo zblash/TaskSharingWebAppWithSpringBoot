@@ -52,13 +52,12 @@ public class UserController {
     @GetMapping("/me")
     public String Me(Authentication authentication,Model model){
         model.addAttribute("user",userService.findByUserName(authentication.getName()));
-
         return "me/index";
     }
 
     @GetMapping("me/groups")
     public String meGroups(Model model){
-        model.addAttribute("groups",userService.findByUserName(securityService.findLoggedInUsername()).getGroups());
+        model.addAttribute("groups",securityService.findLoggedInUser().getGroups());
         return "me/groups";
     }
 
