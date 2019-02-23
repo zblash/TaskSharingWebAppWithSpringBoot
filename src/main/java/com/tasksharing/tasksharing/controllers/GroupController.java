@@ -1,5 +1,6 @@
 package com.tasksharing.tasksharing.controllers;
 
+import com.tasksharing.tasksharing.models.CustomPrincipal;
 import com.tasksharing.tasksharing.models.Group;
 import com.tasksharing.tasksharing.models.Privilege;
 import com.tasksharing.tasksharing.models.User;
@@ -91,21 +92,22 @@ public class GroupController {
     }
 
     @PostMapping("/group/create")
-    public String CreateGroupPost(@Valid @ModelAttribute("group") Group group, BindingResult result, Model model){
+    public String CreateGroupPost(@Valid @ModelAttribute("group") Group group,Authentication authentication, BindingResult result, Model model){
 
         if (result.hasErrors()){
             return "group/create";
         }
-        group.addUser(userService.findByUserName(securityService.findLoggedInUsername()));
+        groupService.Add(group);
         User user = userService.findByUserName(securityService.findLoggedInUsername());
+        user.addGroup(group);
         Privilege createdprivilege = new Privilege();
         createdprivilege.setName(group.getGroupName().toUpperCase()+"_ADMIN");
         user.addPrivilege(createdprivilege);
         userService.Update(user);
-        groupService.Add(group);
+        ((CustomPrincipal) authentication.getPrincipal()).setUser(user);
 
         securityService.reloadPrivilege(user);
-        return "redirect:/group/"+group.getGroupName();
+        return "redirect:/group/"+group.getSlugName();
     }
 
 

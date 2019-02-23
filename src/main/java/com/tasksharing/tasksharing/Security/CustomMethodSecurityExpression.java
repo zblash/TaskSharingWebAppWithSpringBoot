@@ -1,5 +1,6 @@
 package com.tasksharing.tasksharing.Security;
 
+import com.tasksharing.tasksharing.models.CustomPrincipal;
 import com.tasksharing.tasksharing.models.Group;
 import com.tasksharing.tasksharing.models.User;
 import com.tasksharing.tasksharing.services.Concrete.UserService;
@@ -20,14 +21,16 @@ public class CustomMethodSecurityExpression extends SecurityExpressionRoot imple
     }
 
     public boolean isMember(String slugName) {
-        logger.info(this.authentication.getName());
-        User user = userService.findByUserName("zxc");
+        User user = ((CustomPrincipal) this.authentication.getPrincipal()).getUser();
+
         return hasGroup(user,slugName);
     }
 
     private boolean hasGroup(User user, String groupSlugName){
         for (Group group : user.getGroups()){
-            if(groupSlugName == group.getSlugName()){
+            logger.info(group.getSlugName());
+            logger.info(groupSlugName);
+            if(groupSlugName.equals(group.getSlugName())){
                 return true;
             }
         }

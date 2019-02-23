@@ -1,11 +1,15 @@
 package com.tasksharing.tasksharing.models;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 @Entity
 @Table(name = "users")
@@ -35,8 +39,23 @@ public class User {
     @Size(min = 5)
     private String password;
 
-    @ManyToMany(mappedBy = "users",fetch = FetchType.LAZY)
-    private Collection<Group> groups  = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_group",
+            joinColumns =
+            @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns =
+            @JoinColumn(name = "group_id", referencedColumnName = "id"))
+    private Collection<Group> groups;
+
+    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SUBSELECT  )
+    @JoinTable(name = "user_privilege",
+            joinColumns =
+            @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns =
+            @JoinColumn(name = "privilege_id", referencedColumnName = "id"))
+    private Collection<Privilege> privileges;
 
     public void addGroup(Group group){
         groups.add(group);
@@ -45,16 +64,6 @@ public class User {
     public void removeGroup(Group group){
         groups.remove(group);
     }
-
-
-
-    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    @JoinTable(name = "users_privileges",
-            joinColumns =
-            @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns =
-            @JoinColumn(name = "privilege_id", referencedColumnName = "id"))
-    private Collection<Privilege> privileges;
 
     public void addPrivilege(Privilege privilege){
         privileges.add(privilege);

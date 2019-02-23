@@ -13,13 +13,10 @@ import org.springframework.security.config.annotation.method.configuration.Globa
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
 
-    @Autowired
-    UserService userService;
-
     @Override
     protected MethodSecurityExpressionHandler createExpressionHandler() {
         CustomMethodSecurityExpressionHandler expressionHandler =
-                new CustomMethodSecurityExpressionHandler(userService);
+                new CustomMethodSecurityExpressionHandler();
         expressionHandler.setPermissionEvaluator(new CustomPermissionEvaluator());
         return expressionHandler;
     }

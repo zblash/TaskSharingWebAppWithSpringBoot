@@ -5,21 +5,6 @@
     <title>Title</title>
 </head>
 <body>
-<span th:text="${group.groupName}"> Name </span>
-
-
-<tr th:if="${group.Users.empty}">
-    <td colspan="2"> There is no User </td>
-</tr>
-<tr th:each="user : ${group.Users}">
-    <td><span th:text="${user.UserName}"> Name </span></td>
-</tr>
-
-<tr th:if="${group.Tasks.empty}">
-    <td colspan="2"> There is no Task </td>
-</tr>
-<tr th:each="user : ${group.Tasks}">
-    <td><span th:text="${user.Name}"> Name </span></td>
-</tr>
+hello
 </body>
 </html>

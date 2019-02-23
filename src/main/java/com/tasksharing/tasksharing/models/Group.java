@@ -28,22 +28,17 @@ public class Group {
     @OneToMany(mappedBy = "group",fetch = FetchType.LAZY)
     private Collection<Task> tasks = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_group",
-            joinColumns = @JoinColumn(name = "group_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @ManyToMany(mappedBy = "groups",fetch = FetchType.EAGER)
     private Collection<User> users = new ArrayList<>();
 
     public void addUser(User user){
         users.add(user);
-        user.getGroups().add(this);
+        user.addGroup(this);
     }
 
     public void removeUser(User user){
         users.remove(user);
-        user.getGroups().remove(this);
-
+        user.removeGroup(this);
     }
 
     public Group() {
