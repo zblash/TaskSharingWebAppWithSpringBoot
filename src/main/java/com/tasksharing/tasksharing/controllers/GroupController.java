@@ -58,20 +58,13 @@ public class GroupController {
     }
 
     @PreAuthorize("hasPermission('com.tasksharing.tasksharing.models.Group',#name,'ADMIN')")
-    @GetMapping("/group/add-user/{name}")
-    public String AddUser(@PathVariable("name") String name, Model model){
-        model.addAttribute("groupName",name);
-        return "group/adduser";
-    }
-
-    @PreAuthorize("hasPermission('com.tasksharing.tasksharing.models.Group',#name,'ADMIN')")
     @PostMapping("/group/add-user/{name}")
     public String AddUser(@PathVariable("name") String name,@RequestParam("username") String username, Model model){
         logger.info(name,username);
         User user = userService.findByUserName(username);
         logger.info(user.getUserName());
         Group group = groupService.findBySlugName(name);
-        Privilege createdprivilege = privilegeRepository.findByName(group.getGroupName().toUpperCase()+"_USER");
+        Privilege createdprivilege = privilegeRepository.findByName(group.getSlugName().toUpperCase()+"_USER");
         if(createdprivilege == null){
             createdprivilege = new Privilege();
             createdprivilege.setName(group.getGroupName().toUpperCase()+"_USER");

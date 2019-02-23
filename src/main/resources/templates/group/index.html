@@ -1,10 +1,23 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-hello
+<span sec:authorize="isAuthenticated()">
+                | Logged user: <span sec:authentication="name"></span> |
+                <a th:href="@{/logout}">Sign Out</a>
+            </span>
+
+<span th:text="${group.slugName}"></span>
+<th:block sec:authorize="hasPermission('com.tasksharing.tasksharing.models.Group',#vars.group.slugName,'ADMIN')">
+    <form th:action="@{/group/add-user/{addto}(addto=${group.slugName})}" method="post">
+        <label>Eklenecek Kullanıcı Adı</label>
+        <input type="text" name="username" class="form-control"/>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Giriş Yap</button>
+    </form>
+</th:block>
 </body>
 </html>
