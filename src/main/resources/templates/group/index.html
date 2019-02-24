@@ -16,10 +16,11 @@
 <tr th:if="${group.tasks.empty}">
     <td colspan="2"> There is no Task </td>
 </tr>
-<tr th:each="task : ${group.tasks}">
-    <td>Task - <span th:text="${task.name}"> Name </span>
+<tr th:each="taskk : ${group.tasks}">
+    <td>Task - <span th:text="${taskk.name}"> Name </span>
         <th:block sec:authorize="hasPermission('com.tasksharing.tasksharing.models.Group',#vars.group.slugName,'ADMIN')">
-            <form th:action="@{/task/delete-to/{deleteto}(id=${task.id},deleteto=${group.slugName})}" th:object="${task}" th:method="delete" >
+            <a th:href="@{/task/update/{slugname}(id=${taskk.id},slugname=${group.slugName})}">Düzenle</a>
+            <form th:action="@{/task/delete-to/{deleteto}(id=${taskk.id},deleteto=${group.slugName})}" th:method="delete" >
                 <input type="hidden" name="_method" value="delete" />
                 <button type="submit">Kaldır</button>
             </form>
@@ -36,7 +37,7 @@
         <td colspan="2"> There is no User </td>
     </tr>
     <tr th:each="user : ${group.users}">
-        <td>Task - <span th:text="${user.userName}"> Name </span>
+        <td>User - <span th:text="${user.userName}"> Name </span>
             <th:block sec:authorize="hasPermission('com.tasksharing.tasksharing.models.Group',#vars.group.slugName,'ADMIN')">
                 <form th:action="@{/group/remove-to/{removeto}(id=${user.id},removeto=${group.slugName})}" th:object="${user}" th:method="post" >
                     <input type="hidden" name="_method" value="post" />
@@ -55,12 +56,13 @@
         <button class="btn btn-lg btn-primary btn-block" type="submit">Ekle</button>
     </form>
 
-    <form th:action="@{/task/add-task/{addto}(addto=${group.slugName})}" th:object="${task}" method="post">
+    <form th:action="@{/task/add-task/{addto}(addto=${group.slugName})}" th:object="${newtask}" method="post">
         <label>Task ismi</label>
         <input type="text" th:field="*{Name}" class="form-control"/>
+        <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name null error</span>
         <label>Task aciklama</label>
         <input type="text" th:field="*{Description}" class="form-control"/>
-        <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Email Error</span>
+        <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description null error</span>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Ekle</button>
     </form>
 </th:block>

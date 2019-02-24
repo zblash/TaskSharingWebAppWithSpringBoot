@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form th:action="@{/task/update/{slug}(id=${#request.getParameter('id')},slug=${slugname})}" th:object="${task}" method="post">
+    <label>Task ismi</label>
+    <input type="text" th:field="*{Name}" class="form-control"/>
+    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name null error</span>
+    <label>Task aciklama</label>
+    <input type="text" th:field="*{Description}" class="form-control"/>
+    <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description null error</span>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Ekle</button>
+</form>
+</body>
+</html>

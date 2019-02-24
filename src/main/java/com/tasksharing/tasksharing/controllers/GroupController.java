@@ -49,8 +49,9 @@ public class GroupController {
     @GetMapping("/group/{slugname}")
     public String Group(@PathVariable("slugname") String slugname, Model model){
             model.addAttribute("group",groupService.findBySlugName(slugname));
-            if (!model.containsAttribute("task")){
-                model.addAttribute("task", new Task());
+            if (!model.containsAttribute("newtask")){
+                model.addAttribute("newtask", new Task());
+
             }
             return "group/index";
     }

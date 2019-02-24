@@ -50,4 +50,8 @@ public class TaskService {
     public Task Update(Task task){
        return taskRepository.saveAndFlush(task);
     }
+
+    public boolean hasGroup(Task task, String slugname) {
+       return task.getGroup().getSlugName().equals(slugname);
+    }
 }

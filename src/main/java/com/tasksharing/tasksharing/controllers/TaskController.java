@@ -9,11 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -33,15 +31,15 @@ public class TaskController {
 
     @PreAuthorize("hasPermission('com.tasksharing.tasksharing.models.Group',#slugname,'ADMIN')")
     @PostMapping("/task/add-task/{slugname}")
-    public String addTask(@PathVariable("slugname") String slugname, @Valid Task task, BindingResult result,final RedirectAttributes redirectAttributes){
+    public String addTask(@PathVariable("slugname") String slugname, @Valid Task newtask, BindingResult result,final RedirectAttributes redirectAttributes){
 
         if(result.hasErrors()){
             logger.info(String.valueOf(result.getErrorCount()));
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.task", result);
-            redirectAttributes.addFlashAttribute("task", task);
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.newtask", result);
+            redirectAttributes.addFlashAttribute("newtask", newtask);
         }else {
-            task.setGroup(groupService.findBySlugName(slugname));
-            taskService.Add(task);
+            newtask.setGroup(groupService.findBySlugName(slugname));
+            taskService.Add(newtask);
         }
 
         return "redirect:/group/"+slugname;
@@ -51,6 +49,34 @@ public class TaskController {
     @DeleteMapping("/task/delete-to/{slugname}")
     public String deleteTask(@PathVariable String slugname,@RequestParam Long id){
         taskService.Delete(taskService.findById(id));
+        return "redirect:/group/"+slugname;
+    }
+
+    @PreAuthorize("hasPermission('com.tasksharing.tasksharing.models.Group',#slugname,'ADMIN')")
+    @GetMapping("/task/update/{slugname}")
+    public String updateTask(@PathVariable String slugname, @RequestParam Long id, Model model){
+        Task task = taskService.findById(id);
+        if(taskService.hasGroup(task,slugname)){
+            model.addAttribute("task",task);
+            return "/task/edit";
+        }
+        return "redirect:/group/"+slugname;
+    }
+
+    @PreAuthorize("hasPermission('com.tasksharing.tasksharing.models.Group',#slugname,'ADMIN')")
+    @PostMapping("/task/update/{slugname}")
+    public String updateTaskPost(@PathVariable String slugname,@RequestParam Long id,@Valid Task task, BindingResult result,final RedirectAttributes redirectAttributes,Model model){
+
+        if(result.hasErrors()){
+            model.addAttribute("task",task);
+            return "/task/edit";
+        }
+            Task taskByid = taskService.findById(id);
+            if(taskService.hasGroup(taskByid,slugname)){
+                taskByid.setName(task.getName());
+                taskByid.setDescription(task.getDescription());
+                taskService.Add(taskByid);
+            }
         return "redirect:/group/"+slugname;
     }
 }
