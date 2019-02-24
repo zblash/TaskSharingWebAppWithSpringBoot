@@ -50,7 +50,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .defaultSuccessUrl("/me/groups")
-                .loginPage("/login").permitAll();
+                .loginPage("/login").permitAll()
+                .and()
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID");
 
     }
     @Override
