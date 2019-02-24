@@ -9,7 +9,8 @@
     <td colspan="2"> There is no Group </td>
 </tr>
 <tr th:each="group : ${groups}">
-    <td><span th:text="${group.groupName}"> Name </span></td>
+        <a th:href="@{/group/{slug}(slug=${group.slugName})}" th:text="${group.groupName}">
+    </td>
 </tr>
 </body>
 </html>

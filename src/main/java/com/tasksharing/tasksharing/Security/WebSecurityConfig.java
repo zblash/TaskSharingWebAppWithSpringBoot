@@ -49,7 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .defaultSuccessUrl("/me")
+                .defaultSuccessUrl("/me/groups")
                 .loginPage("/login").permitAll();
 
     }

@@ -1,9 +1,6 @@
 package com.tasksharing.tasksharing.controllers;
 
-import com.tasksharing.tasksharing.models.CustomPrincipal;
-import com.tasksharing.tasksharing.models.Group;
-import com.tasksharing.tasksharing.models.Privilege;
-import com.tasksharing.tasksharing.models.User;
+import com.tasksharing.tasksharing.models.*;
 import com.tasksharing.tasksharing.repositories.PrivilegeRepository;
 import com.tasksharing.tasksharing.services.Concrete.GroupService;
 import com.tasksharing.tasksharing.services.Concrete.SecurityService;
@@ -51,10 +48,25 @@ public class GroupController {
     @PreAuthorize("isMember(#slugname)")
     @GetMapping("/group/{slugname}")
     public String Group(@PathVariable("slugname") String slugname, Model model){
-
-        Group group = groupService.findBySlugName(slugname);
-            model.addAttribute("group",group);
+            model.addAttribute("group",groupService.findBySlugName(slugname));
+            if (!model.containsAttribute("task")){
+                model.addAttribute("task", new Task());
+            }
             return "group/index";
+    }
+
+    @PreAuthorize("hasPermission('com.tasksharing.tasksharing.models.Group',#slugname,'ADMIN')")
+    @PostMapping("/group/remove-to/{slugname}")
+    public String removeUser(@PathVariable String slugname,@RequestParam Long id){
+        User user = userService.findById(id);
+
+        if(userService.hasGroup(user,slugname)){
+            userService.removePrivileges(user,slugname);
+            Group group = groupService.findBySlugName(slugname);
+            group.removeUser(user);
+            groupService.Update(group);
+        }
+        return "redirect:/group/"+slugname;
     }
 
     @PreAuthorize("hasPermission('com.tasksharing.tasksharing.models.Group',#name,'ADMIN')")
@@ -67,7 +79,7 @@ public class GroupController {
         Privilege createdprivilege = privilegeRepository.findByName(group.getSlugName().toUpperCase()+"_USER");
         if(createdprivilege == null){
             createdprivilege = new Privilege();
-            createdprivilege.setName(group.getGroupName().toUpperCase()+"_USER");
+            createdprivilege.setName(group.getSlugName().toUpperCase()+"_USER");
         }
 
         user.addPrivilege(createdprivilege);
@@ -75,7 +87,7 @@ public class GroupController {
         logger.info(user.getUserName());
         userService.Update(user);
         groupService.Update(group);
-        return "redirect:/group/"+group.getGroupName();
+        return "redirect:/group/"+group.getSlugName();
     }
 
     @GetMapping("/group/create")
@@ -94,7 +106,7 @@ public class GroupController {
         User user = userService.findByUserName(securityService.findLoggedInUsername());
         user.addGroup(group);
         Privilege createdprivilege = new Privilege();
-        createdprivilege.setName(group.getGroupName().toUpperCase()+"_ADMIN");
+        createdprivilege.setName(group.getSlugName().toUpperCase()+"_ADMIN");
         user.addPrivilege(createdprivilege);
         userService.Update(user);
         ((CustomPrincipal) authentication.getPrincipal()).setUser(user);

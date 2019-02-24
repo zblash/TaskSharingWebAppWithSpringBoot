@@ -1,6 +1,8 @@
 package com.tasksharing.tasksharing.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Entity
@@ -11,12 +13,13 @@ public class Task implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotNull
+    @Size(min = 3)
     private String name;
 
+    @NotNull
+    @Size(min = 3)
     private String description;
-
-    @Transient
-    private Long groupId;
 
     private boolean isActive;
 
@@ -63,14 +66,6 @@ public class Task implements Serializable {
 
     public void setActive(boolean active) {
         isActive = active;
-    }
-
-    public Long getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(Long groupId) {
-        this.groupId = groupId;
     }
 
     public Group getGroup() {

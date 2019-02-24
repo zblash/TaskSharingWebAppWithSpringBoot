@@ -28,8 +28,6 @@ public class CustomMethodSecurityExpression extends SecurityExpressionRoot imple
 
     private boolean hasGroup(User user, String groupSlugName){
         for (Group group : user.getGroups()){
-            logger.info(group.getSlugName());
-            logger.info(groupSlugName);
             if(groupSlugName.equals(group.getSlugName())){
                 return true;
             }

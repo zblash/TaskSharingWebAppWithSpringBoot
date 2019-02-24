@@ -10,13 +10,56 @@
                 | Logged user: <span sec:authentication="name"></span> |
                 <a th:href="@{/logout}">Sign Out</a>
             </span>
+<table>
+<tr th:if="${group.tasks.empty}">
+    <td colspan="2"> There is no Task </td>
+</tr>
+<tr th:each="task : ${group.tasks}">
+    <td>Task - <span th:text="${task.name}"> Name </span>
+        <th:block sec:authorize="hasPermission('com.tasksharing.tasksharing.models.Group',#vars.group.slugName,'ADMIN')">
+            <form th:action="@{/task/delete-to/{deleteto}(id=${task.id},deleteto=${group.slugName})}" th:object="${task}" th:method="delete" >
+                <input type="hidden" name="_method" value="delete" />
+                <button type="submit">Kaldır</button>
+            </form>
+        </th:block>
+    </td>
+</tr>
+</table>
+<table>
+    <thead>
+    <th>Kullanıcılar</th>
+    </thead>
 
+    <tr th:if="${group.users.empty}">
+        <td colspan="2"> There is no User </td>
+    </tr>
+    <tr th:each="user : ${group.users}">
+        <td>Task - <span th:text="${user.userName}"> Name </span>
+            <th:block sec:authorize="hasPermission('com.tasksharing.tasksharing.models.Group',#vars.group.slugName,'ADMIN')">
+                <form th:action="@{/group/remove-to/{removeto}(id=${user.id},removeto=${group.slugName})}" th:object="${user}" th:method="post" >
+                    <input type="hidden" name="_method" value="post" />
+                    <button type="submit">Gruptan Çıkar</button>
+                </form>
+            </th:block>
+        </td>
+    </tr>
+</table>
 <span th:text="${group.slugName}"></span>
+
 <th:block sec:authorize="hasPermission('com.tasksharing.tasksharing.models.Group',#vars.group.slugName,'ADMIN')">
     <form th:action="@{/group/add-user/{addto}(addto=${group.slugName})}" method="post">
         <label>Eklenecek Kullanıcı Adı</label>
         <input type="text" name="username" class="form-control"/>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Giriş Yap</button>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Ekle</button>
+    </form>
+
+    <form th:action="@{/task/add-task/{addto}(addto=${group.slugName})}" th:object="${task}" method="post">
+        <label>Task ismi</label>
+        <input type="text" th:field="*{Name}" class="form-control"/>
+        <label>Task aciklama</label>
+        <input type="text" th:field="*{Description}" class="form-control"/>
+        <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Email Error</span>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Ekle</button>
     </form>
 </th:block>
 </body>
