@@ -1,7 +1,10 @@
 package com.tasksharing.tasksharing.services.Concrete;
 
 import com.tasksharing.tasksharing.models.Group;
+import com.tasksharing.tasksharing.models.Privilege;
+import com.tasksharing.tasksharing.models.User;
 import com.tasksharing.tasksharing.repositories.GroupRepository;
+import com.tasksharing.tasksharing.repositories.PrivilegeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +17,9 @@ public class GroupService {
     @Autowired
     private GroupRepository groupRepository;
 
+    @Autowired
+    private PrivilegeRepository privilegeRepository;
+
     public List<Group> findAll() {
 
         return groupRepository.findAll();
@@ -21,32 +27,33 @@ public class GroupService {
 
     public Group findById(Long taskId){
         Optional<Group> group = groupRepository.findById(taskId);
-
-        try{
-            if (!group.isPresent())
-                throw new RuntimeException();
-
-            return group.get();
-
-        }catch (Exception ex){
-            throw new RuntimeException();
-        }
-
+        return group.orElseThrow(RuntimeException::new);
     }
 
-    public void Add(Group task){
-        groupRepository.save(task);
+    public void Add(Group group){
+        groupRepository.save(group);
     }
 
-    public void Delete(Group task){
-        groupRepository.delete(task);
-    }
 
-    public Group Update(Group task){
-        return groupRepository.saveAndFlush(task);
+    public Group Update(Group group){
+        return groupRepository.saveAndFlush(group);
     }
 
     public Group findBySlugName(String name) {
         return groupRepository.findBySlugName(name);
+    }
+
+    public void removeGroup(String slugname){
+        Group group = groupRepository.findBySlugName(slugname);
+        for (User user : group.getUsers()) {
+            user.removeGroup(group);
+            for(Privilege privilege : privilegeRepository.findAll()){
+                if (privilege.getName().startsWith(slugname.toUpperCase())){
+                    user.removePrivilege(privilege);
+                    privilegeRepository.delete(privilege);
+                }
+            }
+        }
+        groupRepository.delete(group);
     }
 }

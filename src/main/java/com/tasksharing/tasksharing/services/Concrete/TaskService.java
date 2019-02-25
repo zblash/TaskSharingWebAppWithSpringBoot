@@ -25,21 +25,11 @@ public class TaskService {
 
     public Task findById(Long taskId){
         Optional<Task> task = taskRepository.findById(taskId);
-
-        try{
-            if (!task.isPresent())
-                throw new RuntimeException();
-
-            return task.get();
-
-        }catch (Exception ex){
-            throw new RuntimeException();
-        }
+        return task.orElseThrow(RuntimeException::new);
 
     }
 
     public void Add(Task task){
-//        task.setGroup(groupRepository.findById(task.getGroupId()).orElseThrow(RuntimeException::new));
         taskRepository.save(task);
     }
 

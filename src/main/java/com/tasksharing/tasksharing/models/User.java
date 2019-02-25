@@ -9,7 +9,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 
 @Entity
 @Table(name = "users")
@@ -46,7 +45,7 @@ public class User {
             @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns =
             @JoinColumn(name = "group_id", referencedColumnName = "id"))
-    private Collection<Group> groups;
+    private Collection<Group> groups = new ArrayList<>();
 
     @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @Fetch(FetchMode.SUBSELECT  )
@@ -55,7 +54,7 @@ public class User {
             @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns =
             @JoinColumn(name = "privilege_id", referencedColumnName = "id"))
-    private Collection<Privilege> privileges;
+    private Collection<Privilege> privileges = new ArrayList<>();
 
     public void addGroup(Group group){
         groups.add(group);

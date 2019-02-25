@@ -23,7 +23,7 @@ public class Task implements Serializable {
 
     private boolean isActive;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "group_id")
     private Group group;
 

@@ -38,18 +38,8 @@ public class UserService {
     }
 
     public User findById(Long userId) {
-        Optional<User> group = userRepository.findById(userId);
-
-        try {
-            if (!group.isPresent())
-                throw new RuntimeException();
-
-            return group.get();
-
-        } catch (Exception ex) {
-            throw new RuntimeException();
-        }
-
+        Optional<User> user = userRepository.findById(userId);
+        return user.orElseThrow(RuntimeException::new);
     }
 
     public void Add(User user) {
@@ -67,10 +57,6 @@ public class UserService {
         return userRepository.saveAndFlush(user);
     }
 
-    public List<User> findByGroups_Id(Long id) {
-        return userRepository.findByGroups_Id(id);
-    }
-
     public boolean hasGroup(User user, String groupSlugName) {
         for (Group group : user.getGroups()) {
             if (groupSlugName.equals(group.getSlugName())) {
@@ -81,12 +67,12 @@ public class UserService {
     }
 
     public void removePrivileges(User user, String slugName) {
-        for (Privilege privilege : user.getPrivileges()){
+        user.getPrivileges().forEach(privilege -> {
             if (privilege.getName().startsWith(slugName.toUpperCase())){
                 user.removePrivilege(privilege);
                 userRepository.save(user);
             }
-        }
+        });
     }
 }
 

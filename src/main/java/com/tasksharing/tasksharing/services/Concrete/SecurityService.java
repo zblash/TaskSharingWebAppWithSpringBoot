@@ -21,6 +21,9 @@ import java.util.List;
 @Service
 public class SecurityService {
 
+    @Autowired
+    private UserService userService;
+
     public String findLoggedInUsername() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
@@ -33,12 +36,12 @@ public class SecurityService {
         return user;
     }
 
-    public void reloadPrivilege(User user){
+    public void reloadLoggedInUser(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findById(((CustomPrincipal)auth.getPrincipal()).getUser().getId());
         List<GrantedAuthority> authorities = new ArrayList<>();
-        for (Privilege privilege : user.getPrivileges()) {
-            authorities.add(new SimpleGrantedAuthority(privilege.getName()));
-        }
+        user.getPrivileges().forEach(privilege ->  authorities.add(new SimpleGrantedAuthority(privilege.getName())));
+        ((CustomPrincipal) auth.getPrincipal()).setUser(user);
         Authentication newAuth = new UsernamePasswordAuthenticationToken(auth.getPrincipal(), auth.getCredentials(),authorities);
         SecurityContextHolder.getContext().setAuthentication(newAuth);
     }

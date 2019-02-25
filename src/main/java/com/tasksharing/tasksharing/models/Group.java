@@ -7,7 +7,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Set;
 
 @Entity
 @Table(name = "groups")
@@ -29,7 +28,7 @@ public class Group {
     @NotNull
     private String description;
 
-    @OneToMany(mappedBy = "group",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "group",cascade = CascadeType.REMOVE,orphanRemoval = true)
     private Collection<Task> tasks = new ArrayList<>();
 
     @ManyToMany(mappedBy = "groups",fetch = FetchType.EAGER)

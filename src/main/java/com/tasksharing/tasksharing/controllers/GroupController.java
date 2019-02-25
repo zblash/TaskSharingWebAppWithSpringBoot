@@ -4,6 +4,7 @@ import com.tasksharing.tasksharing.models.*;
 import com.tasksharing.tasksharing.repositories.PrivilegeRepository;
 import com.tasksharing.tasksharing.services.Concrete.GroupService;
 import com.tasksharing.tasksharing.services.Concrete.SecurityService;
+import com.tasksharing.tasksharing.services.Concrete.TaskService;
 import com.tasksharing.tasksharing.services.Concrete.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +36,9 @@ public class GroupController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    TaskService taskService;
 
     @Autowired
     SecurityService securityService;
@@ -101,6 +105,7 @@ public class GroupController {
     public String CreateGroupPost(@Valid @ModelAttribute("group") Group group,Authentication authentication, BindingResult result, Model model){
         model.addAttribute("group",group);
         if (result.hasErrors()){
+            logger.info("sea");
             return "group/create";
         }
         groupService.Add(group);
@@ -112,9 +117,16 @@ public class GroupController {
         userService.Update(user);
         ((CustomPrincipal) authentication.getPrincipal()).setUser(user);
 
-        securityService.reloadPrivilege(user);
-        return "redirect:/group/"+group.getSlugName();
+        securityService.reloadLoggedInUser();
+        return "redirect:/me/groups/";
     }
 
+    @PreAuthorize("hasPermission('com.tasksharing.tasksharing.models.Group',#slugname,'ADMIN')")
+    @GetMapping("/group/delete/{slugname}")
+    public String DeleteGroup(@PathVariable String slugname){
+        groupService.removeGroup(slugname);
 
+        securityService.reloadLoggedInUser();
+        return "redirect:/me/groups";
+    }
 }

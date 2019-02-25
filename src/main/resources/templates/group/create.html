@@ -8,9 +8,9 @@
 </head>
 <body>
 <div layout:fragment="content" class="container">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="col-lg-12">
+    <span class="row">
+        <span class="col-lg-12">
+            <span class="col-lg-12">
                 <h2 id="nav-breadcrumbs">Grup Olustur</h2>
                 <div class="bs-component">
                     <ol class="breadcrumb">
@@ -19,18 +19,18 @@
                         <li class="breadcrumb-item active">Yeni</li>
                     </ol>
                 </div>
-            <form autocomplete="off" action="#" th:action="@{/group/create}" th:object="${group}" method="post">
+            <form th:action="@{/group/create}" th:object="${group}" method="post">
                 <label>Grup İsmi </label>
                 <input type="text" id="groupName" placeholder="Grup İsmi" th:field="*{GroupName}" class="form-control"/><br/>
-                <div class="invalid-feedback" th:if="${#fields.hasErrors('groupName')}" th:errors="*{groupName}">FirstName Error</div>
+                <span th:if="${#fields.hasErrors('groupName')}" th:errors="*{groupName}">FirstName Error</span>
 
                 <label>Grup Açıklaması </label>
                 <input type="text" id="description" placeholder="Grup Açıklaması" th:field="*{Description}" class="form-control"/><br/>
-                <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">FirstName Error</div>
+                <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}">FirstName Error</span>
 
                 <label>Grup Takma ismi </label>
                 <input type="text" id="slugName" placeholder="Grup Takma ismi" th:field="*{SlugName}" class="form-control"/><br/>
-                <div class="invalid-feedback" th:if="${#fields.hasErrors('slugName')}" th:errors="*{slugName}">FirstName Error</div>
+                <span th:if="${#fields.hasErrors('slugName')}" th:errors="*{slugName}">FirstName Error</span>
 
                 <button type="submit" class="btn btn-success text-center form-control">Kaydet</button>
             </form>
