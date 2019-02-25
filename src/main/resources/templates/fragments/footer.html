@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+<div class="fixed-bottom" th:fragment="footer" th:align="center">
+    &copy;<span th:text="${#temporals.format(#temporals.createNow(), 'yyyy')}">2019</span>
+    <span>TaskShare App</span>
+</div>
+</body>
+</html>

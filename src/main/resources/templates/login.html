@@ -1,12 +1,15 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/main_layout}">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-<div class="container">
-    <div class="alert alert-danger" role="alert" th:if="${param.error}">
+<div class="container" layout:fragment="content">
+    <div class="alert alert-dismissible alert-danger" th:if="${param.error}">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
         Kullanıcı Adı veya Şifre yanlış.
     </div>
     <form th:action="@{/login}" method="post">
@@ -18,6 +21,7 @@
         <input type="password" id="password" name="password" class="form-control"/>
         <br/>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Giriş Yap</button>
+
     </form>
 </div>
 </body>

@@ -1,24 +1,41 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/main_layout}">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-<form autocomplete="off" action="#" th:action="@{/group/create}" th:object="${group}" method="post">
-    <label>Grup Adı </label>
-    <input type="text" id="groupName" placeholder="Grup İsmi" th:field="*{GroupName}" class="form-control"/><br/>
-    <span th:if="${#fields.hasErrors('groupName')}" th:errors="*{groupName}">FirstName Error</span>
+<div layout:fragment="content" class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="col-lg-12">
+                <h2 id="nav-breadcrumbs">Grup Olustur</h2>
+                <div class="bs-component">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Anasayfa</a></li>
+                        <li class="breadcrumb-item"><a href="/me/groups">Gruplar</a></li>
+                        <li class="breadcrumb-item active">Yeni</li>
+                    </ol>
+                </div>
+            <form autocomplete="off" action="#" th:action="@{/group/create}" th:object="${group}" method="post">
+                <label>Grup İsmi </label>
+                <input type="text" id="groupName" placeholder="Grup İsmi" th:field="*{GroupName}" class="form-control"/><br/>
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('groupName')}" th:errors="*{groupName}">FirstName Error</div>
 
-    <label>Adnız </label>
-    <input type="text" id="description" placeholder="description" th:field="*{Description}" class="form-control"/><br/>
-    <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}">FirstName Error</span>
+                <label>Grup Açıklaması </label>
+                <input type="text" id="description" placeholder="Grup Açıklaması" th:field="*{Description}" class="form-control"/><br/>
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">FirstName Error</div>
 
-    <label>Adnız </label>
-    <input type="text" id="slugName" placeholder="description" th:field="*{SlugName}" class="form-control"/><br/>
-    <span th:if="${#fields.hasErrors('slugName')}" th:errors="*{slugName}">FirstName Error</span>
+                <label>Grup Takma ismi </label>
+                <input type="text" id="slugName" placeholder="Grup Takma ismi" th:field="*{SlugName}" class="form-control"/><br/>
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('slugName')}" th:errors="*{slugName}">FirstName Error</div>
 
-    <button type="submit" class="btn btn-success text-center form-control">Kaydet</button>
-</form>
+                <button type="submit" class="btn btn-success text-center form-control">Kaydet</button>
+            </form>
+        </div>
+    </div>
+</div>
 </body>
 </html>

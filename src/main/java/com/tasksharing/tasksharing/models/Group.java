@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
@@ -16,13 +17,16 @@ public class Group {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotNull
     private String groupName;
 
+    @NotNull
     private String slugName;
 
     @Transient
     private Long user_id;
 
+    @NotNull
     private String description;
 
     @OneToMany(mappedBy = "group",fetch = FetchType.LAZY)

@@ -99,7 +99,7 @@ public class GroupController {
 
     @PostMapping("/group/create")
     public String CreateGroupPost(@Valid @ModelAttribute("group") Group group,Authentication authentication, BindingResult result, Model model){
-
+        model.addAttribute("group",group);
         if (result.hasErrors()){
             return "group/create";
         }

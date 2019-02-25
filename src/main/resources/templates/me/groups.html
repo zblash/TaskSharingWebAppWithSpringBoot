@@ -1,16 +1,33 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/main_layout}">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-<tr th:if="${groups.empty}">
-    <td colspan="2"> There is no Group </td>
-</tr>
-<tr th:each="group : ${groups}">
-        <a th:href="@{/group/{slug}(slug=${group.slugName})}" th:text="${group.groupName}">
-    </td>
-</tr>
+<div layout:fragment="content" class="container">
+    <div class="col-lg-12">
+        <h2 id="nav-breadcrumbs">Gruplarım</h2>
+        <div class="bs-component">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Anasayfa</a></li>
+                <li class="breadcrumb-item"><a href="#">Ben</a></li>
+                <li class="breadcrumb-item active">Gruplarım</li>
+            </ol>
+    </div>
+    <div class="row">
+        <div th:each="group : ${groups}" class="col-lg-4">
+    <div class="card border-secondary mb-3">
+        <div class="card-header" th:text="${group.groupName}">Header</div>
+        <div class="card-body">
+            <p class="card-text" th:text="${group.description}"></p>
+            <a class="" th:href="@{/group/{slug}(slug=${group.slugName})}" th:text="@{Gruba Git}"/>
+        </div>
+    </div>
+</div>
+    </div>
+</div>
 </body>
 </html>

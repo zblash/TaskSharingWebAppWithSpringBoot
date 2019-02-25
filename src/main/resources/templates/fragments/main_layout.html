@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="../../static/css/sketchy/bootstrap.min.css" rel="stylesheet" media="screen" th:href="@{/css/sketchy/bootstrap.min.css}"/>
+    <script src="/webjars/jquery/3.2.1/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div th:replace="fragments/header::header"></div>
+    <div style="height: 30px"></div>
+    <div layout:fragment="content"></div>
+
+    <div th:replace="fragments/footer::footer"></div>
+</body>
+</html>

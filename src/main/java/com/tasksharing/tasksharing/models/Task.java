@@ -14,11 +14,11 @@ public class Task implements Serializable {
     private Long id;
 
     @NotNull
-    @Size(min = 3)
+    @Size(min = 3,max = 20)
     private String name;
 
     @NotNull
-    @Size(min = 3)
+    @Size(min = 3,max = 150)
     private String description;
 
     private boolean isActive;
