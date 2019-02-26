@@ -45,9 +45,10 @@ public class GroupService {
 
     public void removeGroup(String slugname){
         Group group = groupRepository.findBySlugName(slugname);
+
         for (User user : group.getUsers()) {
             user.removeGroup(group);
-            for(Privilege privilege : privilegeRepository.findAll()){
+            for(Privilege privilege : user.getPrivileges()){
                 if (privilege.getName().startsWith(slugname.toUpperCase())){
                     user.removePrivilege(privilege);
                     privilegeRepository.delete(privilege);

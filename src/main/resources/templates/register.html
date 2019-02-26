@@ -1,4 +1,6 @@
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/main_layout}">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -6,32 +8,38 @@
 
 <body>
 
-<div class="container">
+<div class="container" layout:fragment="content">
 
-    <h1 class="h3 mb-3 font-weight-normal">Üye Kaydı</h1>
+    <h1 class="h3 mb-3 font-weight-normal">Uye Kaydı</h1>
+    <div class="margin-top20 text-center"><a th:href="@{/login}">Giriş Sayfasına Git</a></div>
 
     <form autocomplete="off" action="#" th:action="@{/register}" th:object="${user}" method="post">
 
-        <label>Adnız </label>
-        <input type="text" id="firstName" placeholder="First Name" th:field="*{FirstName}" class="form-control"/><br/>
-        <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">FirstName Error</span>
+        <div class="alert alert-dismissible alert-danger" th:if="${#fields.hasErrors('*')}">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <ul>
+            <li th:each="err : ${#fields.detailedErrors('*')}"><span th:text="${err}">Errors</span></li>
+            </ul>
+        </div>
+
+        <label>Adınız</label>
+        <input type="text" id="firstName" placeholder="Adınız" th:field="*{FirstName}" class="form-control"/>
+
         <label>Soyadınız</label>
-        <input type="text" id="lastName" placeholder="Last Name" th:field="*{LastName}" class="form-control"/><br/>
-        <span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">LastName Error</span>
+        <input type="text" id="lastName" placeholder="Soyadınız" th:field="*{LastName}" class="form-control"/>
+
         <label>Kullanıcı Adınız</label>
-        <input type="text" id="username" placeholder=" Username" th:field="*{UserName}" class="form-control"/><br/>
-        <span th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}">UserName Error</span>
-        <label>Email</label>
-        <input type="text" id="email" placeholder=" E-mail" th:field="*{Email}" class="form-control"/><br/>
-        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</span>
-        <label>Parolanız </label>
-        <input type="password" id="password" placeholder=" Password" th:field="*{Password}" class="form-control"/><br/>
-        <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</span>
+        <input type="text" id="username" placeholder="Kullanıcı adı" th:field="*{UserName}" class="form-control"/>
+
+        <label>E-mail Adresiniz</label>
+        <input type="text" id="email" placeholder="E-mail" th:field="*{Email}" class="form-control"/>
+
+        <label>Şifreniz</label>
+        <input type="password" id="password" placeholder="Parola" th:field="*{Password}" class="form-control"/>
+        <br>
         <button type="submit" class="btn btn-success text-center form-control">Kaydet</button>
-
-
     </form>
-    <div class="margin-top20 text-center"><a th:href="@{/login}">Giriş Sayfasına Git</a></div>
+
 </div>
 </body>
 </html>

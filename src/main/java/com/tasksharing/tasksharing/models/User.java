@@ -19,7 +19,7 @@ public class User {
     private Long id;
 
     @NotNull
-    @Size(min = 3)
+    @Size(min = 3,max = 25)
     private String userName;
 
     @Email
@@ -27,15 +27,15 @@ public class User {
     private String email;
 
     @NotNull
-    @Size(min = 3)
+    @Size(min = 3,max = 25)
     private String firstName;
 
     @NotNull
-    @Size(min = 3)
+    @Size(min = 3,max = 25)
     private String lastName;
 
     @NotNull
-    @Size(min = 5)
+    @Size(min = 5,max = 50)
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
