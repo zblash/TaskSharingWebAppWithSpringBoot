@@ -45,16 +45,15 @@ public class GroupService {
 
     public void removeGroup(String slugname){
         Group group = groupRepository.findBySlugName(slugname);
-
-        for (User user : group.getUsers()) {
+        group.getUsers().forEach(user -> {
             user.removeGroup(group);
-            for(Privilege privilege : user.getPrivileges()){
-                if (privilege.getName().startsWith(slugname.toUpperCase())){
-                    user.removePrivilege(privilege);
-                    privilegeRepository.delete(privilege);
-                }
-            }
-        }
+            privilegeRepository.findAll().stream().
+                    filter(privilege -> privilege.getName().startsWith(slugname.toUpperCase()))
+                    .forEach(privilege -> {
+                user.removePrivilege(privilege);
+                privilegeRepository.delete(privilege);
+            });
+        });
         groupRepository.delete(group);
     }
 }

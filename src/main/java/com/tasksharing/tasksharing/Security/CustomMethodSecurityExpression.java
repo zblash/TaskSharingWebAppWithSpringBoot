@@ -27,12 +27,7 @@ public class CustomMethodSecurityExpression extends SecurityExpressionRoot imple
     }
 
     private boolean hasGroup(User user, String groupSlugName){
-        for (Group group : user.getGroups()){
-            if(groupSlugName.equals(group.getSlugName())){
-                return true;
-            }
-        }
-        return false;
+        return user.getGroups().stream().anyMatch(group -> groupSlugName.equals(group.getSlugName()));
     }
 
     @Override

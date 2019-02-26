@@ -35,13 +35,9 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
 
     private boolean hasPrivilege(Authentication authentication, String targetType, String permission) {
-        for (GrantedAuthority grantedAuth : authentication.getAuthorities()) {
-            if (grantedAuth.getAuthority().startsWith(targetType)) {
-                if (grantedAuth.getAuthority().contains(permission)) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return authentication.getAuthorities().stream()
+                .anyMatch(grantedAuth -> grantedAuth.getAuthority().startsWith(targetType)
+                        && grantedAuth.getAuthority().contains(permission));
+
     }
 }
