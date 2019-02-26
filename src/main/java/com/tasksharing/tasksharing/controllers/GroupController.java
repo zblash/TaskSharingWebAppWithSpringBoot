@@ -61,6 +61,28 @@ public class GroupController {
     }
 
     @PreAuthorize("hasPermission('com.tasksharing.tasksharing.models.Group',#slugname,'ADMIN')")
+    @GetMapping("/group/update/{slugname}")
+    public String updateGroup(@PathVariable String slugname,Model model){
+        model.addAttribute("group",groupService.findBySlugName(slugname));
+        return "group/edit";
+    }
+
+    @PreAuthorize("hasPermission('com.tasksharing.tasksharing.models.Group',#slugname,'ADMIN')")
+    @PostMapping("/group/update/{slugname}")
+    public String updateGroupPost(@PathVariable String slugname,@Valid Group group,BindingResult result,Model model){
+
+        if (result.hasErrors()){
+            model.addAttribute("group",group);
+            return "group/edit";
+        }
+
+        Group updateGroup = groupService.findBySlugName(slugname);
+        groupService.Update(updateGroup,group);
+        securityService.reloadLoggedInUser();
+        return "redirect:/group/"+group.getSlugName();
+    }
+
+    @PreAuthorize("hasPermission('com.tasksharing.tasksharing.models.Group',#slugname,'ADMIN')")
     @PostMapping("/group/remove-to/{slugname}")
     public String removeUser(@PathVariable String slugname,@RequestParam Long id){
         User user = userService.findById(id);

@@ -79,6 +79,12 @@ public class TaskController {
             }
         return "redirect:/group/"+slugname;
     }
+
+    @PreAuthorize("hasPermission('com.tasksharing.tasksharing.models.Group',#slugname,'ADMIN')")
+    @PostMapping("/task/assigntask/randomly/{slugname}")
+    public String assignTaskRandom(){
+        return "";
+    }
 }
 
 

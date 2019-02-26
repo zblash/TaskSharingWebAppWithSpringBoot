@@ -38,7 +38,23 @@ public class GroupService {
     public Group Update(Group group){
         return groupRepository.saveAndFlush(group);
     }
+    public Group Update(Group updateGroup,Group changeto){
+        updateGroup.getUsers().forEach(user -> {
+            user.getPrivileges().stream().
+                    filter(privilege -> privilege.getName().startsWith(updateGroup.getSlugName().toUpperCase()))
+                    .forEach(privilege -> {
+                        String[] privilege_types = privilege.getName().split("_");
+                        privilege.setName(changeto.getSlugName().toUpperCase()+"_"+privilege_types[1]);
+                        privilegeRepository.save(privilege);
+                    });
+        });
+        updateGroup.setGroupName(changeto.getGroupName());
+        updateGroup.setSlugName(changeto.getSlugName());
+        updateGroup.setDescription(changeto.getDescription());
+        return groupRepository.save(updateGroup);
 
+
+    }
     public Group findBySlugName(String name) {
         return groupRepository.findBySlugName(name);
     }
