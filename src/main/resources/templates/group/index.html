@@ -11,9 +11,28 @@
 <body>
 <div layout:fragment="content" class="container">
     <div class="row">
+        <div class="col-lg-12"><h2 id="nav-breadcrumbs">Gruplarım</h2></div>
+        <div class="col-lg-11">
+            <div class="bs-component">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Anasayfa</a></li>
+                    <li class="breadcrumb-item"><a href="#">Ben</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/me/groups}">Gruplarım</a></li>
+                    <li class="breadcrumb-item active"><span th:text="${group.groupName}"></span></li>
+                </ol>
+            </div>
+        </div>
+        <div class="col-lg-1">
+            <th:block sec:authorize="hasPermission('com.tasksharing.tasksharing.models.Group',#vars.group.slugName,'ADMIN')">
+            <a th:href="@{/group/update/{slugName} (slugName=${group.slugName})}" class="btn btn-success">Düzenle</a>
+            </th:block>
+        </div>
         <div class="col-lg-6 float-left">
             <h1 id="navbars">Görevler</h1>
-        <table class="table table-hover">
+            <th:block sec:authorize="hasPermission('com.tasksharing.tasksharing.models.Group',#vars.group.slugName,'ADMIN')">
+            <a th:href="@{/task/assigntask/randomly/{slugName} (slugName=${group.slugName})}" class="btn btn-success">Görev Ataması Yap</a>
+            </th:block>
+            <table class="table table-hover">
             <thead>
             <tr>
                 <th scope="col">Görev Adı</th>
@@ -93,6 +112,42 @@
                 </form>
 
             </th:block>
+        </div>
+        <div class="col-lg-12">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">Görev Adı</th>
+                    <th scope="col">Açıklama</th>
+                    <th scope="col">Kullanıcılar</th>
+                    <th:block sec:authorize="hasPermission('com.tasksharing.tasksharing.models.Group',#vars.group.slugName,'ADMIN')">
+                        <th scope="col">İşlem</th>
+                    </th:block>
+                </tr>
+                </thead>
+                <tr th:if="${group.tasks.empty}">
+                    <td colspan="3"> There is no Task </td>
+                </tr>
+                <tr th:each="taskk : ${group.tasks}">
+                    <td><p th:text="${taskk.name}"> Name </p></td>
+                    <td><p th:text="${taskk.description}"> Name </p></td>
+                    <td>
+                        <th:block th:each="userr : ${taskk.users}">
+                        <p th:text="${userr.userName}"> Name </p>
+                        </th:block>
+                    </td>
+                    <th:block sec:authorize="hasPermission('com.tasksharing.tasksharing.models.Group',#vars.group.slugName,'ADMIN')">
+                        <td>
+                            <a style="float: left" class="btn btn-info" th:href="@{/task/update/{slugname}(id=${taskk.id},slugname=${group.slugName})}">Düzenle</a>
+                            <form th:action="@{/task/delete-to/{deleteto}(id=${taskk.id},deleteto=${group.slugName})}" th:method="delete" >
+                                <input type="hidden" name="_method" value="delete" />
+                                <button type="submit" class="btn btn-danger">X</button>
+                            </form>
+                        </td>
+                    </th:block>
+
+                </tr>
+            </table>
         </div>
     </div>
 

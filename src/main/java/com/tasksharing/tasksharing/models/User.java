@@ -35,7 +35,7 @@ public class User {
     private String lastName;
 
     @NotNull
-    @Size(min = 5,max = 50)
+    @Size(min = 5,max = 90)
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -48,7 +48,7 @@ public class User {
     private Collection<Group> groups = new ArrayList<>();
 
     @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    @Fetch(FetchMode.SUBSELECT  )
+    @Fetch(FetchMode.SUBSELECT)
     @JoinTable(name = "user_privilege",
             joinColumns =
             @JoinColumn(name = "user_id", referencedColumnName = "id"),

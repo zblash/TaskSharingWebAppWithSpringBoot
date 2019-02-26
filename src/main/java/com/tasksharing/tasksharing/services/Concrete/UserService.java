@@ -1,14 +1,10 @@
 package com.tasksharing.tasksharing.services.Concrete;
 
-import com.tasksharing.tasksharing.models.Group;
-import com.tasksharing.tasksharing.models.Privilege;
 import com.tasksharing.tasksharing.models.User;
 import com.tasksharing.tasksharing.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,9 +21,6 @@ public class UserService {
 
     Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    @Autowired
-    private SecurityService securityService;
-
     public List<User> findAll() {
 
         return userRepository.findAll();
@@ -43,7 +36,6 @@ public class UserService {
     }
 
     public void Add(User user) {
-
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
 

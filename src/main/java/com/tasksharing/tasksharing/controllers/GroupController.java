@@ -52,6 +52,8 @@ public class GroupController {
     @PreAuthorize("isMember(#slugname)")
     @GetMapping("/group/{slugname}")
     public String Group(@PathVariable("slugname") String slugname, Model model){
+
+            securityService.reloadLoggedInUser();
             model.addAttribute("group",groupService.findBySlugName(slugname));
             if (!model.containsAttribute("newtask")){
                 model.addAttribute("newtask", new Task());
@@ -99,9 +101,7 @@ public class GroupController {
     @PreAuthorize("hasPermission('com.tasksharing.tasksharing.models.Group',#name,'ADMIN')")
     @PostMapping("/group/add-user/{name}")
     public String AddUser(@PathVariable("name") String name,@RequestParam("username") String username, Model model){
-        logger.info(name,username);
         User user = userService.findByUserName(username);
-        logger.info(user.getUserName());
         Group group = groupService.findBySlugName(name);
         Privilege createdprivilege = privilegeRepository.findByName(group.getSlugName().toUpperCase()+"_USER");
         if(createdprivilege == null){

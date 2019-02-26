@@ -2,6 +2,8 @@ package com.tasksharing.tasksharing.controllers;
 
 import com.tasksharing.tasksharing.models.Group;
 import com.tasksharing.tasksharing.models.Task;
+import com.tasksharing.tasksharing.models.User;
+import com.tasksharing.tasksharing.models.UserTaskModel;
 import com.tasksharing.tasksharing.services.Concrete.GroupService;
 import com.tasksharing.tasksharing.services.Concrete.TaskService;
 import org.slf4j.Logger;
@@ -12,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
@@ -80,10 +81,40 @@ public class TaskController {
         return "redirect:/group/"+slugname;
     }
 
+
+    @PreAuthorize("hasPermission('com.tasksharing.tasksharing.models.Group',#slugname,'ADMIN')")
+    @GetMapping("/task/assigntask/randomly/{slugname}")
+    public String assignTaskRandomly(@PathVariable String slugname,Model model){
+
+        Group group = groupService.findBySlugName(slugname);
+        UserTaskModel taskModel = new UserTaskModel();
+        taskModel.setTasks(group.getTasks());
+        taskModel.setUsers(group.getUsers());
+        model.addAttribute("group",group);
+        model.addAttribute("taskModel",taskModel);
+        return "/task/assigntask";
+    }
+
     @PreAuthorize("hasPermission('com.tasksharing.tasksharing.models.Group',#slugname,'ADMIN')")
     @PostMapping("/task/assigntask/randomly/{slugname}")
-    public String assignTaskRandom(){
-        return "";
+    public String assignTaskRandomlyPost(@PathVariable String slugname,@Valid @ModelAttribute UserTaskModel taskModel,Model model,BindingResult result){
+
+        if (result.hasErrors()){
+            Group group = groupService.findBySlugName(slugname);
+            model.addAttribute("group",group);
+            model.addAttribute("taskModel",taskModel);
+            return "/task/assigntask";
+        }
+            taskModel.getTasks().forEach(task -> {
+               User u = taskModel.getUsers().stream()
+                        .skip((int) (taskModel.getTasks().size() * Math.random() + 1))
+                        .findFirst()
+                        .get();
+               task.addUser(u);
+               taskService.Update(task);
+               taskModel.getUsers().remove(u);
+            });
+        return "redirect:/group/"+slugname;
     }
 }
 

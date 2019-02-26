@@ -1,10 +1,26 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/main_layout}">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
+<div layout:fragment="content" class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="col-lg-12">
+                <h2 id="nav-breadcrumbs">Görevi Düzenle</h2>
+                <div class="bs-component">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Anasayfa</a></li>
+                        <li class="breadcrumb-item"><a href="/me/groups">Gruplar</a></li>
+                        <li class="breadcrumb-item"><a href="/me/groups">Görev</a></li>
+                        <li class="breadcrumb-item active">Düzenle</li>
+                    </ol>
+                </div>
 <form th:action="@{/task/update/{slug}(id=${#request.getParameter('id')},slug=${slugname})}" th:object="${task}" method="post">
     <label>Task ismi</label>
     <input type="text" th:field="*{Name}" class="form-control"/>
@@ -14,5 +30,6 @@
     <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description null error</span>
     <button class="btn btn-lg btn-primary btn-block" type="submit">Ekle</button>
 </form>
+            </div>
 </body>
 </html>

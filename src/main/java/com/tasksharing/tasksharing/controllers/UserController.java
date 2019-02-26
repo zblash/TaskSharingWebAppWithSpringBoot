@@ -57,6 +57,7 @@ public class UserController {
 
     @GetMapping("me/groups")
     public String meGroups(Model model){
+        securityService.reloadLoggedInUser();
         model.addAttribute("groups",userService.findById(securityService.findLoggedInUser().getId()).getGroups());
         return "me/groups";
     }

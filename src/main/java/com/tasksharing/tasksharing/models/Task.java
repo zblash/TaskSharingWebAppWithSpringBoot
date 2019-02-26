@@ -1,9 +1,14 @@
 package com.tasksharing.tasksharing.models;
 
+import org.hibernate.annotations.Fetch;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "tasks")
@@ -27,6 +32,14 @@ public class Task implements Serializable {
     @JoinColumn(name = "group_id")
     private Group group;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_task",
+            joinColumns =
+            @JoinColumn(name = "task_id", referencedColumnName = "id"),
+            inverseJoinColumns =
+            @JoinColumn(name = "user_id", referencedColumnName = "id"))
+    private Collection<User> users = new ArrayList<>();
+
     public Task() {
     }
 
@@ -34,6 +47,14 @@ public class Task implements Serializable {
         this.name = name;
         this.description = description;
         this.group = group;
+    }
+
+    public void addUser(User user){
+        users.add(user);
+    }
+
+    public void removeUser(User user){
+        users.remove(user);
     }
 
     public Long getId() {
@@ -74,5 +95,13 @@ public class Task implements Serializable {
 
     public void setGroup(Group group) {
         this.group = group;
+    }
+
+    public Collection<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Collection<User> users) {
+        this.users = users;
     }
 }

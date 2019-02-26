@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/main_layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div layout:fragment="content" class="container">
+    <div class="row">
+            <div class="col-lg-12">
+                <h2 id="nav-breadcrumbs">Görev Ata</h2>
+                <div class="bs-component">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Anasayfa</a></li>
+                        <li class="breadcrumb-item"><a href="/me/groups">Gruplar</a></li>
+                        <li class="breadcrumb-item"><a href="/me/groups">Görev</a></li>
+                        <li class="breadcrumb-item active">Ata</li>
+                    </ol>
+                </div>
+            </div>
+        <div class="col-lg-12">
+<form th:action="@{/task/assigntask/randomly/{slugname}(slugname=${group.slugName})}" th:object="${taskModel}" method="post">
+    <div class="col-lg-6 float-left">
+    <h1 id="forms">Kullanıcılar</h1>
+    <th:block th:each="user : ${taskModel.users}">
+        <div>
+        <input type="checkbox" th:field="*{Users}" th:value="${user.id}"/>
+        <label th:text="${user.userName}"></label>
+        </div>
+    </th:block>
+</div>
+        <div class="col-lg-6 float-left">
+    <h1 id="forms">Görevler</h1>
+    <th:block th:each="task : ${taskModel.tasks}">
+        <div>
+        <input type="checkbox" th:field="*{Tasks}" th:value="${task.id}"/>
+        <label th:text="${task.name}"></label>
+        </div>
+    </th:block>
+        </div>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Ata</button>
+</form></div>
+            </div>
+</body>
+</html>
