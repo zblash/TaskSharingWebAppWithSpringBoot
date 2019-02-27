@@ -28,7 +28,7 @@
     <label>Task aciklama</label>
     <input type="text" th:field="*{Description}" class="form-control"/>
     <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description null error</span>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Ekle</button>
+    <button class="btn btn-secondary text-center form-control" type="submit">Ekle</button>
 </form>
             </div>
 </body>

@@ -85,7 +85,6 @@ public class TaskController {
     @PreAuthorize("hasPermission('com.tasksharing.tasksharing.models.Group',#slugname,'ADMIN')")
     @GetMapping("/task/assigntask/randomly/{slugname}")
     public String assignTaskRandomly(@PathVariable String slugname,Model model){
-
         Group group = groupService.findBySlugName(slugname);
         UserTaskModel taskModel = new UserTaskModel();
         taskModel.setTasks(group.getTasks());
