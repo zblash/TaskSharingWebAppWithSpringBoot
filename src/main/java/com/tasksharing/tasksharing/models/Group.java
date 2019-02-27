@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Table(name = "groups")
@@ -29,10 +30,10 @@ public class Group {
     private String description;
 
     @OneToMany(mappedBy = "group",cascade = CascadeType.REMOVE,orphanRemoval = true)
-    private Collection<Task> tasks = new ArrayList<>();
+    private Set<Task> tasks;
 
     @ManyToMany(mappedBy = "groups",fetch = FetchType.EAGER)
-    private Collection<User> users = new ArrayList<>();
+    private Set<User> users;
 
     public void addUser(User user){
         users.add(user);
@@ -48,8 +49,9 @@ public class Group {
 
     }
 
-    public Group(String groupName, Long user_id, String description, Collection<Task> tasks, Collection<User> users) {
+    public Group(@NotNull String groupName, @NotNull String slugName, Long user_id, @NotNull String description, Set<Task> tasks, Set<User> users) {
         this.groupName = groupName;
+        this.slugName = slugName;
         this.user_id = user_id;
         this.description = description;
         this.tasks = tasks;
@@ -96,19 +98,19 @@ public class Group {
         this.description = description;
     }
 
-    public Collection<Task> getTasks() {
+    public Set<Task> getTasks() {
         return tasks;
     }
 
-    public void setTasks(Collection<Task> tasks) {
+    public void setTasks(Set<Task> tasks) {
         this.tasks = tasks;
     }
 
-    public Collection<User> getUsers() {
+    public Set<User> getUsers() {
         return users;
     }
 
-    public void setUsers(Collection<User> users) {
+    public void setUsers(Set<User> users) {
         this.users = users;
     }
 

@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -45,7 +46,7 @@ public class User {
             @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns =
             @JoinColumn(name = "group_id", referencedColumnName = "id"))
-    private Collection<Group> groups = new ArrayList<>();
+    private Set<Group> groups;
 
     @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @Fetch(FetchMode.SUBSELECT)
@@ -54,7 +55,7 @@ public class User {
             @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns =
             @JoinColumn(name = "privilege_id", referencedColumnName = "id"))
-    private Collection<Privilege> privileges = new ArrayList<>();
+    private Set<Privilege> privileges;
 
     public void addGroup(Group group){
         groups.add(group);
@@ -75,12 +76,14 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String userName, String firstName, String lastName, Collection<Group> groups) {
-        this.id = id;
+    public User(@NotNull @Size(min = 3, max = 25) String userName, @Email @NotNull String email, @NotNull @Size(min = 3, max = 25) String firstName, @NotNull @Size(min = 3, max = 25) String lastName, @NotNull @Size(min = 5, max = 90) String password, Set<Group> groups, Set<Privilege> privileges) {
         this.userName = userName;
+        this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.password = password;
         this.groups = groups;
+        this.privileges = privileges;
     }
 
     public Long getId() {
@@ -131,19 +134,19 @@ public class User {
         this.email = email;
     }
 
-    public Collection<Group> getGroups() {
+    public Set<Group> getGroups() {
         return groups;
     }
 
-    public void setGroups(Collection<Group> groups) {
+    public void setGroups(Set<Group> groups) {
         this.groups = groups;
     }
 
-    public Collection<Privilege> getPrivileges() {
+    public Set<Privilege> getPrivileges() {
         return privileges;
     }
 
-    public void setPrivileges(Collection<Privilege> privileges) {
+    public void setPrivileges(Set<Privilege> privileges) {
         this.privileges = privileges;
     }
 }

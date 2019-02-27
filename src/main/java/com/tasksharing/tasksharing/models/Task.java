@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "tasks")
@@ -38,7 +39,7 @@ public class Task implements Serializable {
             @JoinColumn(name = "task_id", referencedColumnName = "id"),
             inverseJoinColumns =
             @JoinColumn(name = "user_id", referencedColumnName = "id"))
-    private Collection<User> users = new ArrayList<>();
+    private Set<User> users;
 
     public Task() {
     }
@@ -97,11 +98,11 @@ public class Task implements Serializable {
         this.group = group;
     }
 
-    public Collection<User> getUsers() {
+    public Set<User> getUsers() {
         return users;
     }
 
-    public void setUsers(Collection<User> users) {
+    public void setUsers(Set<User> users) {
         this.users = users;
     }
 }

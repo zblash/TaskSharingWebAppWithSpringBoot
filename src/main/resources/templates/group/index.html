@@ -30,7 +30,7 @@
         <div class="col-lg-12">
             <h2 id="nav-tabs">
                 <th:block sec:authorize="hasPermission('com.tasksharing.tasksharing.models.Group',#vars.group.slugName,'ADMIN')">
-                    <a th:href="@{/task/assigntask/randomly/{slugName} (slugName=${group.slugName})}" class="btn btn-success">Görev Ataması Yap</a>
+                    <a th:href="@{/task/assigntask/randomly/{slugName} (slugName=${group.slugName})}" class="btn btn-success">Rastgele Görev Ataması Yap</a>
                 </th:block>
             </h2>
             <div class="bs-component">
@@ -97,12 +97,15 @@
                             <tr th:if="${group.tasks.empty}">
                                 <td colspan="3"> Hiç Görev Eklenmemiş </td>
                             </tr>
-                            <tr th:each="taskk : ${group.tasks}">
+                            <th:block th:each="taskk : ${group.tasks}" th:if="${taskk.isActive()}">
+                            <tr>
                                 <td><p th:text="${taskk.name}"> Name </p></td>
                                 <td><p th:text="${taskk.description}"> Name </p></td>
                                 <th:block sec:authorize="hasPermission('com.tasksharing.tasksharing.models.Group',#vars.group.slugName,'ADMIN')">
                                     <td>
                                         <a style="float: left" class="btn btn-info" th:href="@{/task/update/{slugname}(id=${taskk.id},slugname=${group.slugName})}">Düzenle</a>
+
+                                        <a style="float: left" class="btn btn-info" th:href="@{/task/assigntask/{slugname}(id=${taskk.id},slugname=${group.slugName})}">Kişi Ata</a>
                                         <form th:action="@{/task/delete-to/{deleteto}(id=${taskk.id},deleteto=${group.slugName})}" th:method="delete" >
                                             <input type="hidden" name="_method" value="delete" />
                                             <button type="submit" class="btn btn-danger">X</button>
@@ -110,6 +113,7 @@
                                     </td>
                                 </th:block>
                             </tr>
+                            </th:block>
                         </table>
                     </div>
                     <div class="tab-pane fade" id="assignedtasks">
@@ -125,27 +129,27 @@
                             </tr>
                             </thead>
                             <tr th:if="${group.tasks.empty}">
-                                <td colspan="3"> There is no Task </td>
+                                <td colspan="3"> Hiç atanmış görev yok </td>
                             </tr>
-                            <tr th:each="taskk : ${group.tasks}">
+                            <th:block th:each="taskk : ${group.tasks}" th:if="${!taskk.isActive()}">
+                            <tr>
                                 <td><p th:text="${taskk.name}"> Name </p></td>
                                 <td><p th:text="${taskk.description}"> Name </p></td>
                                 <td>
-                                    <th:block th:each="userr : ${taskk.users}">
-                                        <p th:text="${userr.userName}"> Name </p>
-                                    </th:block>
+                                    <p>
+                                        <span th:each="userr : ${taskk.users}" th:text="${userr.userName}+' | '"> Name </span>
+                                    </p>
                                 </td>
                                 <th:block sec:authorize="hasPermission('com.tasksharing.tasksharing.models.Group',#vars.group.slugName,'ADMIN')">
                                     <td>
-                                        <a style="float: left" class="btn btn-info" th:href="@{/task/update/{slugname}(id=${taskk.id},slugname=${group.slugName})}">Düzenle</a>
                                         <form th:action="@{/task/delete-to/{deleteto}(id=${taskk.id},deleteto=${group.slugName})}" th:method="delete" >
                                             <input type="hidden" name="_method" value="delete" />
                                             <button type="submit" class="btn btn-danger">X</button>
                                         </form>
                                     </td>
                                 </th:block>
-
                             </tr>
+                            </th:block>
                         </table>
                     </div>
                     <th:block sec:authorize="hasPermission('com.tasksharing.tasksharing.models.Group',#vars.group.slugName,'ADMIN')">

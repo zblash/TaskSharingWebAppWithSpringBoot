@@ -2,28 +2,29 @@ package com.tasksharing.tasksharing.models;
 
 import javax.validation.constraints.NotEmpty;
 import java.util.Collection;
+import java.util.Set;
 
 public class UserTaskModel {
 
     @NotEmpty
-    private Collection<User> users;
+    private Set<User> users;
 
     @NotEmpty
-    private Collection<Task> tasks;
+    private Set<Task> tasks;
 
-    public Collection<User> getUsers() {
+    public Set<User> getUsers() {
         return users;
     }
 
-    public void setUsers(Collection<User> users) {
+    public void setUsers(Set<User> users) {
         this.users = users;
     }
 
-    public Collection<Task> getTasks() {
+    public Set<Task> getTasks() {
         return tasks;
     }
 
-    public void setTasks(Collection<Task> tasks) {
+    public void setTasks(Set<Task> tasks) {
         this.tasks = tasks;
     }
 }
