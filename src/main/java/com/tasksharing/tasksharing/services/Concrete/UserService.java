@@ -31,8 +31,7 @@ public class UserService {
     }
 
     public User findById(Long userId) {
-        Optional<User> user = userRepository.findById(userId);
-        return user.orElseThrow(RuntimeException::new);
+        return userRepository.findById(userId).orElseThrow(RuntimeException::new);
     }
 
     public void Add(User user) {
@@ -60,6 +59,13 @@ public class UserService {
                 userRepository.save(user);
             }
         });
+    }
+    public User findByEmail(String email){
+        return userRepository.findByEmail(email).orElseThrow(RuntimeException::new);
+    }
+
+    public Optional<User> findByResetToken(String token){
+        return userRepository.findByResetToken(token);
     }
 }
 

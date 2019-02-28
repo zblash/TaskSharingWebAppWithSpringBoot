@@ -39,6 +39,9 @@ public class User {
     @Size(min = 5,max = 90)
     private String password;
 
+    private String resetToken;
+
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_group",
@@ -149,4 +152,13 @@ public class User {
     public void setPrivileges(Set<Privilege> privileges) {
         this.privileges = privileges;
     }
+
+    public String getResetToken() {
+        return resetToken;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+    }
+
 }

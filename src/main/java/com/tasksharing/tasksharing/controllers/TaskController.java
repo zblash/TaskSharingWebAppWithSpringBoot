@@ -122,7 +122,7 @@ public class TaskController {
 
     @PreAuthorize("hasPermission('com.tasksharing.tasksharing.models.Group',#slugname,'ADMIN')")
     @GetMapping("/task/assigntask/{slugname}")
-    public String assignTas(@PathVariable String slugname,@RequestParam Long id, Model model) {
+    public String assignTask(@PathVariable String slugname,@RequestParam Long id, Model model) {
         Group group = groupService.findBySlugName(slugname);
         UserTaskModel taskModel = new UserTaskModel();
         taskModel.setUsers(group.getUsers());
