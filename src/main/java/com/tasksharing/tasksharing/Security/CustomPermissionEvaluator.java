@@ -1,16 +1,11 @@
 package com.tasksharing.tasksharing.Security;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 
 import java.io.Serializable;
 
 public class CustomPermissionEvaluator implements PermissionEvaluator {
-
-    Logger logger = LoggerFactory.getLogger(CustomPermissionEvaluator.class);
 
     @Override
     public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {

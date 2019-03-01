@@ -4,8 +4,6 @@ import com.tasksharing.tasksharing.models.User;
 import com.tasksharing.tasksharing.services.Concrete.EMailService;
 import com.tasksharing.tasksharing.services.Concrete.SecurityService;
 import com.tasksharing.tasksharing.services.Concrete.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.Authentication;
@@ -27,8 +25,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
-    private Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private SecurityService securityService;
@@ -83,19 +79,16 @@ public class UserController {
     @PostMapping("/forgot-password")
     public String forgotPasswordPagePost(@RequestParam String email, Model model, HttpServletRequest request){
        User user = userService.findByEmail(email);
+
        user.setResetToken(UUID.randomUUID().toString());
        userService.Update(user);
 
         String appUrl = request.getScheme() + "://" + request.getServerName()+":"+request.getServerPort();
 
-        SimpleMailMessage passwordResetEmail = new SimpleMailMessage();
-        passwordResetEmail.setFrom("taskshare@taskshare.com");
-        passwordResetEmail.setTo(user.getEmail());
-        passwordResetEmail.setSubject("Şifre Sıfırlama");
-        passwordResetEmail.setText("Şifrenizi sıfırlamak için linke tıklayın:\n" + appUrl
-                + "/password-reset?token=" + user.getResetToken());
+        String mailMessage = "Şifrenizi sıfırlamak için linke tıklayın:\n" + appUrl
+                + "/password-reset?token=" + user.getResetToken();
 
-        emailService.sendEMail(passwordResetEmail);
+        emailService.sendPasswordResetMail(user.getEmail(),"Şifre Sıfırlama",mailMessage);
 
         model.addAttribute("messageSended","Şifre sıfırlama linki email adresinize gönderildi.");
         return "forgot-password";

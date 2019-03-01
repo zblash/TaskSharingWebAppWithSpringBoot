@@ -12,10 +12,6 @@ import org.springframework.security.core.Authentication;
 
 public class CustomMethodSecurityExpression extends SecurityExpressionRoot implements MethodSecurityExpressionOperations {
 
-    private UserService userService;
-
-    Logger logger = LoggerFactory.getLogger(CustomMethodSecurityExpression.class);
-
     public CustomMethodSecurityExpression(Authentication authentication) {
         super(authentication);
     }

@@ -3,6 +3,7 @@ package com.tasksharing.tasksharing.services.Concrete;
 import com.tasksharing.tasksharing.models.CustomPrincipal;
 import com.tasksharing.tasksharing.models.Privilege;
 import com.tasksharing.tasksharing.models.User;
+import com.tasksharing.tasksharing.services.Abstract.ISecurityService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,23 +20,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class SecurityService {
+public class SecurityService implements ISecurityService {
 
     @Autowired
     private UserService userService;
 
+    @Override
     public String findLoggedInUsername() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         return auth != null ? auth.getName() : null;
     }
 
+    @Override
     public User findLoggedInUser() {
         User user = ((CustomPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
 
         return user;
     }
 
+    @Override
     public void reloadLoggedInUser(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findById(((CustomPrincipal)auth.getPrincipal()).getUser().getId());
