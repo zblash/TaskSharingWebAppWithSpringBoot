@@ -34,7 +34,7 @@
 </div>
         <div class="col-lg-6 float-left">
     <h1 id="forms">Görevler</h1>
-    <th:block th:each="task : ${taskModel.tasks}" th:if="${taskk.isActive()}">
+    <th:block th:each="task : ${taskModel.tasks}" th:if="${task.isActive()}">
         <div>
         <input type="checkbox" th:field="*{Tasks}" th:value="${task.id}"/>
         <label th:text="${task.name}"></label>
