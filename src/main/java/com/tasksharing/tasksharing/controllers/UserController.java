@@ -34,6 +34,12 @@ public class UserController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @GetMapping("/")
+    public String home(){
+        return "redirect:/me/groups";
+    }
+
     @GetMapping("/register")
     public String Register(Model model){
         model.addAttribute("user",new User());
