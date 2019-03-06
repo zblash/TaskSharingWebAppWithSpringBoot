@@ -101,7 +101,6 @@ public class GroupController {
 
         user.addPrivilege(createdprivilege);
         group.addUser(user);
-        logger.info(user.getUserName());
         userService.Update(user);
         groupService.Update(group);
         return "redirect:/group/"+group.getSlugName();
