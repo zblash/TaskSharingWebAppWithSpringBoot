@@ -17,6 +17,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -39,6 +42,12 @@ public class GroupController {
 
     private final Logger logger = LoggerFactory.getLogger(GroupController.class);
 
+
+    @GetMapping("/groups")
+    public List<Group> getAll(Authentication authentication){
+        User user = ((CustomPrincipal) authentication.getPrincipal()).getUser();
+        return new ArrayList<>(user.getGroups());
+    }
 
     @PreAuthorize("isMember(#slugname)")
     @GetMapping("/group/{slugname}")
