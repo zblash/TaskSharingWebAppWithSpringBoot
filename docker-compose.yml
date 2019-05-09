@@ -1,0 +1,21 @@
+version: '3'
+services:
+  db:
+    container_name: stickerdeposu_db
+    image: postgres:10.6
+    ports:
+      - "4540:5432"
+    environment:
+      POSTGRES_DB: taskshare
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+  db-admin:
+    container_name: stickerdeposu_dbadmin
+    image: dpage/pgadmin4
+    depends_on:
+      - db
+    ports:
+      - "6432:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: dev@taskshare.com
+      PGADMIN_DEFAULT_PASSWORD: zblash

@@ -1,7 +1,9 @@
 package com.tasksharing.tasksharing.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -42,6 +44,7 @@ public class User {
     private String resetToken;
 
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_group",
@@ -51,6 +54,7 @@ public class User {
             @JoinColumn(name = "group_id", referencedColumnName = "id"))
     private Set<Group> groups;
 
+    @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @Fetch(FetchMode.SUBSELECT)
     @JoinTable(name = "user_privilege",

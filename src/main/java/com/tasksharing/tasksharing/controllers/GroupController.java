@@ -9,16 +9,17 @@ import com.tasksharing.tasksharing.services.Concrete.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@Controller
+@RestController
+@RequestMapping("/api")
 public class GroupController {
 
     @Autowired
@@ -41,56 +42,39 @@ public class GroupController {
 
     @PreAuthorize("isMember(#slugname)")
     @GetMapping("/group/{slugname}")
-    public String Group(@PathVariable("slugname") String slugname, Model model){
-
-            securityService.reloadLoggedInUser();
-            model.addAttribute("group",groupService.findBySlugName(slugname));
-            if (!model.containsAttribute("newtask")){
-                model.addAttribute("newtask", new Task());
-
-            }
-            return "group/index";
-    }
-
-    @PreAuthorize("hasPermission('com.tasksharing.tasksharing.models.Group',#slugname,'ADMIN')")
-    @GetMapping("/group/update/{slugname}")
-    public String updateGroup(@PathVariable String slugname,Model model){
-        model.addAttribute("group",groupService.findBySlugName(slugname));
-        return "group/edit";
+    public ResponseEntity<?> Group(@PathVariable("slugname") String slugname,Authentication authentication){
+        authentication.getAuthorities().forEach(grantedAuth -> {
+                    logger.info(grantedAuth.getAuthority());
+                }
+        );
+        return ResponseEntity.ok(groupService.findBySlugName(slugname));
     }
 
     @PreAuthorize("hasPermission('com.tasksharing.tasksharing.models.Group',#slugname,'ADMIN')")
     @PostMapping("/group/update/{slugname}")
-    public String updateGroupPost(@PathVariable String slugname,@Valid Group group,BindingResult result,Model model){
-
-        if (result.hasErrors()){
-            model.addAttribute("group",group);
-            return "group/edit";
-        }
+    public ResponseEntity<?> updateGroup(@PathVariable String slugname,@Valid @RequestBody Group group){
 
         Group updateGroup = groupService.findBySlugName(slugname);
-        groupService.Update(updateGroup,group);
-        securityService.reloadLoggedInUser();
-        return "redirect:/group/"+group.getSlugName();
+        return ResponseEntity.ok(groupService.Update(updateGroup,group));
     }
 
     @PreAuthorize("hasPermission('com.tasksharing.tasksharing.models.Group',#slugname,'ADMIN')")
-    @PostMapping("/group/remove-to/{slugname}")
-    public String removeUser(@PathVariable String slugname,@RequestParam Long id){
+    @PostMapping("/group/delete/{slugname}")
+    public ResponseEntity<?> removeUser(@PathVariable String slugname,@RequestParam Long id){
         User user = userService.findById(id);
 
         if(userService.hasGroup(user,slugname)){
             userService.removePrivileges(user,slugname);
             Group group = groupService.findBySlugName(slugname);
             group.removeUser(user);
-            groupService.Update(group);
+            return ResponseEntity.ok(groupService.Update(group));
         }
-        return "redirect:/group/"+slugname;
+        return ResponseEntity.badRequest().body("User not found");
     }
 
     @PreAuthorize("hasPermission('com.tasksharing.tasksharing.models.Group',#name,'ADMIN')")
     @PostMapping("/group/add-user/{name}")
-    public String AddUser(@PathVariable("name") String name,@RequestParam("username") String username, Model model){
+    public ResponseEntity<?> AddUser(@PathVariable("name") String name,@RequestParam("username") String username){
         User user = userService.findByUserName(username);
         Group group = groupService.findBySlugName(name);
         Privilege createdprivilege = privilegeRepository.findByName(group.getSlugName().toUpperCase()+"_USER");
@@ -103,22 +87,11 @@ public class GroupController {
         group.addUser(user);
         userService.Update(user);
         groupService.Update(group);
-        return "redirect:/group/"+group.getSlugName();
-    }
-
-    @GetMapping("/group/create")
-    public String CreateGroup(Model model){
-        model.addAttribute("group",new Group());
-        return "group/create";
+        return ResponseEntity.ok().body("User added to group");
     }
 
     @PostMapping("/group/create")
-    public String CreateGroupPost(@Valid @ModelAttribute("group") Group group,Authentication authentication, BindingResult result, Model model){
-        model.addAttribute("group",group);
-        if (result.hasErrors()){
-            logger.info("sea");
-            return "group/create";
-        }
+    public ResponseEntity<?> CreateGroup(@Valid @RequestBody Group group,Authentication authentication){
         groupService.Add(group);
         User user = userService.findByUserName(securityService.findLoggedInUsername());
         user.addGroup(group);
@@ -127,17 +100,14 @@ public class GroupController {
         user.addPrivilege(createdprivilege);
         userService.Update(user);
         ((CustomPrincipal) authentication.getPrincipal()).setUser(user);
-
-        securityService.reloadLoggedInUser();
-        return "redirect:/me/groups/";
+        return ResponseEntity.ok(group);
     }
 
     @PreAuthorize("hasPermission('com.tasksharing.tasksharing.models.Group',#slugname,'ADMIN')")
     @GetMapping("/group/delete/{slugname}")
-    public String DeleteGroup(@PathVariable String slugname){
+    public ResponseEntity<?> DeleteGroup(@PathVariable String slugname){
         groupService.removeGroup(slugname);
 
-        securityService.reloadLoggedInUser();
-        return "redirect:/me/groups";
+        return ResponseEntity.ok().body("Group removed");
     }
 }

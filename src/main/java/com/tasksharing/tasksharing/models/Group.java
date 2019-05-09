@@ -1,5 +1,6 @@
 package com.tasksharing.tasksharing.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,11 +25,13 @@ public class Group {
     private String slugName;
 
     @Transient
+    @JsonIgnore
     private Long user_id;
 
     @NotNull
     private String description;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "group",cascade = CascadeType.REMOVE,orphanRemoval = true)
     private Set<Task> tasks;
 

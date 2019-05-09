@@ -11,7 +11,7 @@ public interface ITaskService {
 
     Task findById(Long taskId);
 
-    void Add(Task task);
+    Task Add(Task task);
 
     void Delete(Task task);
 
