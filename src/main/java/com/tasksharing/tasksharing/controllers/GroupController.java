@@ -50,6 +50,20 @@ public class GroupController {
     }
 
     @PreAuthorize("isMember(#slugname)")
+    @PostMapping("/group/{slugname}/tasks")
+    public List<Task> getTasks(@PathVariable("slugname") String slugname){
+        Group group = groupService.findBySlugName(slugname);
+        return taskService.findByGroup(group);
+    }
+
+    @PreAuthorize("isMember(#slugname)")
+    @PostMapping("/group/{slugname}/users")
+    public List<User> getUsers(@PathVariable("slugname") String slugname){
+        Group group = groupService.findBySlugName(slugname);
+        return new ArrayList<>(group.getUsers());
+    }
+
+    @PreAuthorize("isMember(#slugname)")
     @GetMapping("/group/{slugname}")
     public ResponseEntity<?> Group(@PathVariable("slugname") String slugname,Authentication authentication){
         authentication.getAuthorities().forEach(grantedAuth -> {

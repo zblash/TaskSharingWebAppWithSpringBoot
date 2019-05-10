@@ -1,5 +1,6 @@
 package com.tasksharing.tasksharing.services.Abstract;
 
+import com.tasksharing.tasksharing.models.Group;
 import com.tasksharing.tasksharing.models.Task;
 
 import java.util.List;
@@ -18,4 +19,6 @@ public interface ITaskService {
     Task Update(Task task);
 
     boolean hasGroup(Task task, String slugname);
+
+    List<Task> findByGroup(Group group);
 }

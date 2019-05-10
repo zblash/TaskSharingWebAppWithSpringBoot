@@ -1,5 +1,6 @@
 package com.tasksharing.tasksharing.services.Concrete;
 
+import com.tasksharing.tasksharing.models.Group;
 import com.tasksharing.tasksharing.models.Task;
 import com.tasksharing.tasksharing.repositories.TaskRepository;
 import com.tasksharing.tasksharing.services.Abstract.ITaskService;
@@ -47,5 +48,10 @@ public class TaskService implements ITaskService {
     @Override
     public boolean hasGroup(Task task, String slugname) {
        return task.getGroup().getSlugName().equals(slugname);
+    }
+
+    @Override
+    public List<Task> findByGroup(Group group) {
+        return taskRepository.findAllByGroup_Id(group.getId());
     }
 }

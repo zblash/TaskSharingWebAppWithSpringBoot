@@ -26,6 +26,8 @@ public class TaskController {
 
     Logger logger = LoggerFactory.getLogger(TaskController.class);
 
+
+
     @PreAuthorize("hasPermission('com.tasksharing.tasksharing.models.Group',#slugname,'ADMIN')")
     @PostMapping("/task/add-task/{slugname}")
     public ResponseEntity<?> addTask(@PathVariable("slugname") String slugname, @RequestBody Task newtask) {
