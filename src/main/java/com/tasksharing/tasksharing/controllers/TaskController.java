@@ -5,6 +5,7 @@ import com.tasksharing.tasksharing.models.User;
 import com.tasksharing.tasksharing.models.UserTaskModel;
 import com.tasksharing.tasksharing.services.Concrete.GroupService;
 import com.tasksharing.tasksharing.services.Concrete.TaskService;
+import com.tasksharing.tasksharing.services.Concrete.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -23,6 +25,9 @@ public class TaskController {
 
     @Autowired
     GroupService groupService;
+
+    @Autowired
+    UserService userService;
 
     Logger logger = LoggerFactory.getLogger(TaskController.class);
 
@@ -81,13 +86,12 @@ public class TaskController {
 
     @PreAuthorize("hasPermission('com.tasksharing.tasksharing.models.Group',#slugname,'ADMIN')")
     @PostMapping("/task/assigntask/{slugname}")
-    public ResponseEntity<?> assignTaskPost(@PathVariable String slugname,@RequestParam Long id, @Valid @RequestBody UserTaskModel taskModel) {
+    public ResponseEntity<?> assignTaskPost(@PathVariable String slugname,@RequestBody(required = true) Map<String,Long> userTask) {
 
-        Task task = taskService.findById(id);
-
-            taskModel.getUsers().forEach(task::addUser);
-            task.setActive(false);
-            return ResponseEntity.ok(taskService.Update(task));
+        Task task = taskService.findById(userTask.get("task"));
+        task.addUser(userService.findById(userTask.get("user")));
+        task.setActive(false);
+        return ResponseEntity.ok(taskService.Update(task));
 
     }
 }
