@@ -86,7 +86,7 @@ public class TaskController {
 
     @PreAuthorize("hasPermission('com.tasksharing.tasksharing.models.Group',#slugname,'ADMIN')")
     @PostMapping("/task/assigntask/{slugname}")
-    public ResponseEntity<?> assignTaskPost(@PathVariable String slugname,@RequestBody(required = true) Map<String,Long> userTask) {
+    public ResponseEntity<?> assignTaskPost(@PathVariable String slugname,@RequestParam(required = true) Map<String,Long> userTask) {
 
         Task task = taskService.findById(userTask.get("task"));
         task.addUser(userService.findById(userTask.get("user")));
